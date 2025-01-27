@@ -1,9 +1,43 @@
 import Image from "next/image";
+import { auth, login, logout } from "@/lib/auth/actions";
+import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+
+  const subject = await auth()
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+      <ol>
+        {subject ? (
+          <>
+            <li>
+              Logged in as <code>{subject.properties.email}</code>.
+            </li>
+            <li>
+              And then check out <code>app/page.tsx</code>.
+            </li>
+              <Link href={"/fantasy"}>Fantasy</Link>
+          </>
+        ) : (
+          <>
+            <li>Login with Yahoo.</li>
+          </>
+        )}
+      </ol>
+
+        <div>
+          {subject ? (
+            <form action={logout}>
+              <button>Logout</button>
+            </form>
+          ) : (
+            <form action={login}>
+              <button>Login with OpenAuth</button>
+            </form>
+          )}
+        </div>
         <Image
           className="dark:invert"
           src="/next.svg"

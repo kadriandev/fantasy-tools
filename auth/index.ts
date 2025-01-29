@@ -1,47 +1,50 @@
 import { Resource } from "sst";
-import { handle } from "hono/aws-lambda"
-import { issuer } from "@openauthjs/openauth"
-import { YahooProvider } from "@openauthjs/openauth/provider/yahoo"
-import { MemoryStorage } from "@openauthjs/openauth/storage/memory"
-import { subjects, userSchema } from "./subjects"
+import { handle } from "hono/aws-lambda";
+import { issuer } from "@openauthjs/openauth";
+import { YahooProvider } from "@openauthjs/openauth/provider/yahoo";
+import { subjects, userSchema } from "./subjects";
+import { db } from "@/db";
+import { users } from "@/db/users.sql";
+import { eq } from "drizzle-orm";
 
 async function getUser(access_token: string) {
   // Get user from database and return user ID
-  const userinfo = await fetch("https://api.login.yahoo.com/openid/v1/userinfo", {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    }
-  }).then(res => res.json())
-
+  const userinfo = await fetch(
+    "https://api.login.yahoo.com/openid/v1/userinfo",
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    },
+  ).then((res) => res.json());
   userinfo.access = access_token;
 
-  return userSchema.parse(userinfo)
+  const user = userSchema.parse(userinfo);
+
+  return user;
 }
 
 const app = issuer({
   subjects,
-  storage: MemoryStorage(),
   // Remove after setting custom domain
   allow: async () => true,
   providers: {
     yahoo: YahooProvider({
       clientID: Resource.YAHOO_CLIENT_ID.value,
       clientSecret: Resource.YAHOO_CLIENT_SECRET.value,
-      scopes: ["openid", "email", "profile"]
-    })
+      scopes: ["openid", "email", "profile"],
+    }),
   },
   success: async (ctx, value) => {
     if (value.provider === "yahoo") {
-      const user = await getUser(value.tokenset.access)
-      if(user)
-        return ctx.subject("user", user)
+      const user = await getUser(value.tokenset.access);
+      if (user) return ctx.subject("user", user);
 
-      throw new Error("Unable to find user.")
+      throw new Error("Unable to find user.");
     }
-    throw new Error("Invalid provider")
+    throw new Error("Invalid provider");
   },
-})
+});
 
-
-export const handler = handle(app)
+export const handler = handle(app);

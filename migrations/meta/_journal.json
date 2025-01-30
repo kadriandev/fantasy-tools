@@ -5,8 +5,22 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1738090207422,
-      "tag": "0000_red_norrin_radd",
+      "when": 1738204976135,
+      "tag": "0000_superb_wilson_fisk",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1738261498424,
+      "tag": "0001_light_sunfire",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1738263101110,
+      "tag": "0002_sudden_jocasta",
       "breakpoints": true
     }
   ]

@@ -1,53 +1,11 @@
-import { db } from "@/db";
 import { createYahooClient } from ".";
-import { DBFantasyStats, FantasyStats, YahooLeagueScoreboard } from "./types";
-
-export const getStatMapper = async (
-  league_key: string,
-): Promise<Map<string, { name: string; abbr: string }>> => {
-  const statMapper = new Map<string, { name: string; abbr: string }>();
-  const { data: stat_categories } = await db
-    .from("leagues")
-    .select("stat_categories")
-    .eq("league_key", league_key)
-    .maybeSingle();
-  if (!stat_categories?.stat_categories) return statMapper;
-
-  for (let stat of stat_categories.stat_categories) {
-    statMapper.set(stat.stat_id + "", { name: stat.name, abbr: stat.abbr });
-  }
-
-  return statMapper;
-};
-
-export const getCurrentWeekStats = async (
-  league_key: string,
-): Promise<Array<FantasyStats>> => {
-  const yf = await createYahooClient();
-
-  const scoreboard: YahooLeagueScoreboard =
-    await yf.league.scoreboard(league_key);
-
-  return scoreboard.scoreboard.matchups
-    .reduce((acc: any[], curr: any) => {
-      acc.push(curr.teams);
-      return acc;
-    }, [])
-    .flat()
-    .map((s) => {
-      const res: FantasyStats = {
-        team_id: s.team_id,
-        team: s.name,
-      };
-      s.stats.forEach((r: any) => {
-        res[r.stat_id] = r.value;
-      });
-      return res;
-    });
-};
+import { DBFantasyStats, YahooLeagueScoreboard } from "./types";
+import { getUserJWT } from "../auth/auth";
 
 export const getMatchupTeamId = async (league_key: string, team_id: string) => {
-  const yf = createYahooClient();
+  const user = await getUserJWT();
+  const yf = createYahooClient(user.properties.access);
+
   const scoreboard = (await yf.league.scoreboard(
     league_key,
   )) as YahooLeagueScoreboard;

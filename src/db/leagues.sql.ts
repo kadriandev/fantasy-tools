@@ -1,59 +1,47 @@
-import {
-  integer,
-  jsonb,
-  numeric,
-  pgTable,
-  primaryKey,
-  text,
-} from "drizzle-orm/pg-core";
+import { integer, jsonb, pgTable, primaryKey, text } from "drizzle-orm/pg-core";
 import { users } from "./users.sql";
 
 export const leagues = pgTable("leagues", {
-  league_key: text("league_key").primaryKey(),
-  name: text("name").notNull(),
-  num_teams: numeric("num_teams").notNull(),
-  game: text("game").notNull(),
-  url: text("url").notNull(),
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  league_key: text().unique().notNull(),
+  name: text().notNull(),
+  num_teams: integer().notNull(),
+  game: text().notNull(),
+  url: text().notNull(),
   stat_categories: jsonb(),
 });
 
-export const user_leagues = pgTable(
-  "user_leagues",
+export const user_to_league = pgTable(
+  "user_to_league",
   {
-    user_id: text("id")
+    user_id: text()
       .notNull()
-      .references(() => users.id),
-    league_key: numeric("league_key")
+      .references(() => users.user_id),
+    league_key: text()
       .notNull()
       .references(() => leagues.league_key),
-    team_id: text("email").notNull(),
+    team_id: integer().notNull(),
+    team_name: text(),
   },
-  (table) => {
-    return [
-      {
-        pk: primaryKey({
-          columns: [table.user_id, table.league_key],
-        }),
-      },
-    ];
-  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.user_id, table.league_key] }),
+  }),
 );
 
-export const league_stats = pgTable(
-  "league_stats",
+export const stats = pgTable(
+  "stats",
   {
-    league_key: text().references(() => leagues.league_key),
-    team_id: integer(),
-    week: integer(),
+    league_key: text()
+      .notNull()
+      .references(() => leagues.league_key),
+    team_id: integer().notNull(),
+    week: integer().notNull(),
+    team_name: text(),
     stats: jsonb().notNull(),
   },
-  (table) => {
-    return [
-      {
-        pk: primaryKey({
-          columns: [table.league_key, table.team_id, table.week],
-        }),
-      },
-    ];
-  },
+  (table) => ({
+    pk: primaryKey({
+      columns: [table.league_key, table.team_id, table.week],
+    }),
+  }),
 );

@@ -11,7 +11,7 @@ export const createStatTableColumns = (
       enableSorting: false,
       enableHiding: true,
     },
-    { header: "Team", accessorKey: "team", enableSorting: false },
+    { header: "Team", accessorKey: "team_name", enableSorting: false },
   ];
 
   columns.push(

@@ -1,8 +1,9 @@
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
-  id: text("id").primaryKey().notNull(),
-  name: text("name").notNull(),
-  email: text("email").notNull(),
-  createdAt: timestamp("createdAt", { mode: "string" }).notNull(),
+  user_id: text().primaryKey(),
+  name: text().notNull(),
+  email: text().notNull(),
+  last_updated: timestamp({ mode: "date" }),
+  created_at: timestamp({ mode: "string" }).notNull(),
 });

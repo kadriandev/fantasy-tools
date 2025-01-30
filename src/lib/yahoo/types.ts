@@ -347,13 +347,14 @@ export type YahooUserGameTeam = {
 
 export type FantasyStats = {
   team_id: string;
-  team: string;
+  team_name: string;
   [key: string]: string;
 };
 
 export type DBFantasyStats = {
+  team_name: string;
   league_key: string;
-  team_id: string;
+  team_id: number;
   name: string;
   week: number;
   stats: { value: string; stat_id: string }[];

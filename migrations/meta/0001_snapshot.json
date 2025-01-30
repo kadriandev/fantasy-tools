@@ -1,69 +1,9 @@
 {
-  "id": "fc57b0e6-a078-4013-be18-d88f6b00b167",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "35f93a23-535b-47dc-b780-6d7845be2b9c",
+  "prevId": "fc57b0e6-a078-4013-be18-d88f6b00b167",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.stats": {
-      "name": "stats",
-      "schema": "",
-      "columns": {
-        "league_key": {
-          "name": "league_key",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "team_id": {
-          "name": "team_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "week": {
-          "name": "week",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "stats": {
-          "name": "stats",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "stats_league_key_leagues_league_key_fk": {
-          "name": "stats_league_key_leagues_league_key_fk",
-          "tableFrom": "stats",
-          "tableTo": "leagues",
-          "columnsFrom": [
-            "league_key"
-          ],
-          "columnsTo": [
-            "league_key"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "stats_league_key_team_id_week_pk": {
-          "name": "stats_league_key_team_id_week_pk",
-          "columns": [
-            "league_key",
-            "team_id",
-            "week"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.leagues": {
       "name": "leagues",
       "schema": "",
@@ -138,6 +78,66 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.stats": {
+      "name": "stats",
+      "schema": "",
+      "columns": {
+        "league_key": {
+          "name": "league_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "team_id": {
+          "name": "team_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "week": {
+          "name": "week",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "stats": {
+          "name": "stats",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "stats_league_key_leagues_league_key_fk": {
+          "name": "stats_league_key_leagues_league_key_fk",
+          "tableFrom": "stats",
+          "tableTo": "leagues",
+          "columnsFrom": [
+            "league_key"
+          ],
+          "columnsTo": [
+            "league_key"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "stats_league_key_team_id_week_pk": {
+          "name": "stats_league_key_team_id_week_pk",
+          "columns": [
+            "league_key",
+            "team_id",
+            "week"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.user_to_league": {
       "name": "user_to_league",
       "schema": "",
@@ -159,6 +159,12 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true
+        },
+        "team_name": {
+          "name": "team_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},

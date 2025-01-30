@@ -1,0 +1,1 @@
+ALTER TABLE "stats" ADD COLUMN "team_name" text;

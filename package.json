@@ -33,6 +33,7 @@
     "pg": "^8.13.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "recharts": "^2.15.1",
     "sst": "3.6.21",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",

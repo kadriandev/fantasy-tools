@@ -17,15 +17,15 @@ export async function GET(req: NextRequest) {
   const res = await db
     .select()
     .from(users)
-    .where(eq(users.id, jwt.properties.sub));
+    .where(eq(users.user_id, jwt.properties.sub));
 
   // Insert user into table if not existing
   if (!res.length) {
     await db.insert(users).values({
-      id: jwt.properties.sub,
+      user_id: jwt.properties.sub,
       email: jwt.properties.email,
       name: jwt.properties.name,
-      createdAt: sql`NOW()`,
+      created_at: sql`NOW()`,
     });
   }
 

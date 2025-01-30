@@ -3,9 +3,6 @@ import { handle } from "hono/aws-lambda";
 import { issuer } from "@openauthjs/openauth";
 import { YahooProvider } from "@openauthjs/openauth/provider/yahoo";
 import { subjects, userSchema } from "./subjects";
-import { db } from "@/db";
-import { users } from "@/db/users.sql";
-import { eq } from "drizzle-orm";
 
 async function getUser(access_token: string) {
   // Get user from database and return user ID

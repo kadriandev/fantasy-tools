@@ -2,14 +2,10 @@ import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Button } from "@/components/ui/button";
 import { auth, login } from "@/lib/auth/actions";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
 export default async function Layout({ children }: { children: ReactNode }) {
   const subject = await auth();
-  if (subject) {
-    redirect("/fantasy");
-  }
   return (
     <>
       <header className="w-full p-3">
@@ -23,7 +19,13 @@ export default async function Layout({ children }: { children: ReactNode }) {
           </span>
           <span className="flex gap-3 items-center">
             <ThemeSwitcher />
-            <Button onClick={login}>Sign In With Yahoo</Button>
+            {!subject ? (
+              <Button onClick={login}>Sign In With Yahoo</Button>
+            ) : (
+              <Button variant="outline">
+                <Link href="/fantasy">Go to App</Link>
+              </Button>
+            )}
           </span>
         </nav>
       </header>

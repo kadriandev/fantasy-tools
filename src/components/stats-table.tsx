@@ -14,7 +14,7 @@ import { DBFantasyStats, FantasyStats } from "@/lib/yahoo/types";
 import { ColumnDef } from "@tanstack/react-table";
 
 interface StatsTableProps {
-  userTeamId: string;
+  userTeamId: number;
   columns: Array<ColumnDef<FantasyStats>>;
   current_stats: Array<FantasyStats>;
   stats: Array<Array<DBFantasyStats>>;
@@ -43,7 +43,7 @@ export default function StatsTable({
         .map((t) => {
           const res: FantasyStats = {
             team_id: t.team_id,
-            team: t.name,
+            team_name: t.team_name,
           };
           t.stats.forEach((s) => (res[s.stat_id] = s.value));
           return res;

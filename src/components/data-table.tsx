@@ -24,7 +24,7 @@ import { ArrowDown, ArrowUp } from "lucide-react";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  teamId: string;
+  teamId: number;
 }
 
 export default function DataTable<TData, TValue>({

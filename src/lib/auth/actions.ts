@@ -39,7 +39,7 @@ export async function login() {
     });
     if (!verified.err && verified.tokens) {
       await setTokens(verified.tokens);
-      redirect("/fantasy");
+      redirect("/leagues");
     }
   }
 

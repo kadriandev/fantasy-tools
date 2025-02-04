@@ -23,7 +23,7 @@ export default async function Layout({ children }: { children: ReactNode }) {
               <Button onClick={login}>Sign In With Yahoo</Button>
             ) : (
               <Button variant="outline">
-                <Link href="/fantasy">Go to App</Link>
+                <Link href="/leagues">Go to App</Link>
               </Button>
             )}
           </span>

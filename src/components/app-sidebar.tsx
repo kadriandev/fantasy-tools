@@ -23,6 +23,8 @@ import AppLink from "./app-link";
 import { refreshLeagues } from "@/lib/data/leagues";
 
 const routes = [
+  { name: "League Info", route: "" },
+  { name: "Standings", route: "standings" },
   { name: "Stats", route: "stats" },
   { name: "Trends", route: "trends" },
 ];
@@ -42,7 +44,7 @@ export async function AppSidebar({ leagues }: AppSidebarProps) {
     <>
       <Sidebar>
         <SidebarHeader className="m-2 text-xl font-bold text-primary">
-          <Link href="/fantasy" className="flex gap-2">
+          <Link href="/leagues" className="flex gap-2">
             <BarChart2 className="h-6 w-6" />
             Fantasy Pro
           </Link>
@@ -67,9 +69,9 @@ export async function AppSidebar({ leagues }: AppSidebarProps) {
           <SidebarSeparator />
 
           <SidebarGroup>
-            <SidebarGroupLabel>Apps</SidebarGroupLabel>
+            <SidebarGroupLabel>Tools</SidebarGroupLabel>
             <SidebarGroupContent>
-              <SidebarMenu>
+              <SidebarMenu suppressHydrationWarning>
                 {routes.map((r) => (
                   <AppLink key={r.name} appName={r.name} stub={r.route} />
                 ))}
@@ -90,16 +92,15 @@ export async function AppSidebar({ leagues }: AppSidebarProps) {
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
-
-                <SidebarMenuItem></SidebarMenuItem>
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
           <SidebarGroup className="gap-3">
+            <ThemeSwitcher />
             <Button variant="outline" onClick={logout}>
               Sign Out
             </Button>
-            <ThemeSwitcher />
+            <p className="text-muted-foreground text-xs">Version: 0.1.0</p>
           </SidebarGroup>
         </SidebarFooter>
       </Sidebar>

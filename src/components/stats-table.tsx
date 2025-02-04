@@ -42,7 +42,7 @@ export default function StatsTable({
         .filter((x: any) => x[0].week === +week)[0]
         .map((t) => {
           const res: FantasyStats = {
-            team_id: t.team_id,
+            team_id: t.team_id + "",
             team_name: t.team_name,
           };
           t.stats.forEach((s) => (res[s.stat_id] = s.value));

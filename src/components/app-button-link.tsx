@@ -1,14 +1,14 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { SidebarMenuItem, SidebarMenuButton } from "./ui/sidebar";
+import { Button } from "./ui/button";
 
-interface AppLinkProps {
+interface AppButtonLinkProps {
   appName: string;
   stub: string;
 }
 
-export default function AppLink({ appName, stub }: AppLinkProps) {
+export default function AppButtonLink({ appName, stub }: AppButtonLinkProps) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -20,9 +20,9 @@ export default function AppLink({ appName, stub }: AppLinkProps) {
 
   return (
     pathname.split("/").length > 2 && (
-      <SidebarMenuItem>
-        <SidebarMenuButton onClick={swapApp}>{appName}</SidebarMenuButton>
-      </SidebarMenuItem>
+      <Button variant="outline" size="sm" onClick={swapApp}>
+        {appName}
+      </Button>
     )
   );
 }

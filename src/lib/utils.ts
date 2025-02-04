@@ -10,3 +10,7 @@ export function getPastMonday() {
   prevMonday.setDate(prevMonday.getDate() - ((prevMonday.getDay() + 6) % 7));
   return prevMonday;
 }
+
+export function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

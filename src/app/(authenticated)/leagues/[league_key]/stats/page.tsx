@@ -28,13 +28,13 @@ export default async function StatsPage({ params }: PageProps) {
   );
 
   return (
-    <>
+    <div className="mx-auto max-w-[90vw]">
       <StatsTable
         userTeamId={userTeamId}
         columns={columns}
         current_stats={current_stats}
         stats={groupStatsByWeek(stats as unknown as DBFantasyStats[])}
       />
-    </>
+    </div>
   );
 }

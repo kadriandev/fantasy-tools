@@ -32,5 +32,5 @@ export async function GET(req: NextRequest) {
   // If successfully found or inserted, set tokens
   await setTokens(exchanged.tokens);
 
-  return NextResponse.redirect(`${url.origin}/`);
+  return NextResponse.redirect(`${url.origin}/leagues`);
 }

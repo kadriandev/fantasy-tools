@@ -3,6 +3,8 @@ import { createClient } from "@openauthjs/openauth/client";
 import { cookies as getCookies } from "next/headers";
 import { decodeJwt } from "jose";
 import { decodedAuthTokenSchema, ParsedAuthToken } from "./schemas";
+import { redirect } from "next/navigation";
+import { subjects } from "../../../auth/subjects";
 
 export const client = createClient({
   clientID: "nextjs",
@@ -32,7 +34,20 @@ export async function setTokens(tokens: { access: string; refresh: string }) {
 export async function getUserJWT(): Promise<ParsedAuthToken> {
   const cookies = await getCookies();
   const access_token = cookies.get("access_token");
-  const jwt = decodeJwt(access_token?.value!);
+
+  if (!access_token) {
+    const refresh_token = cookies.get("refresh_token");
+    const res = await client.verify(subjects, refresh_token?.value!);
+    if (!res.err && res.tokens) {
+      setTokens(res.tokens);
+      const jwt = decodeJwt(res.tokens.access);
+      return decodedAuthTokenSchema.parse(jwt);
+    } else {
+      redirect("/");
+    }
+  }
+
+  const jwt = decodeJwt(access_token.value);
   return decodedAuthTokenSchema.parse(jwt);
 }
 

@@ -7,8 +7,6 @@ import {
   YahooLeagueSettings,
 } from "./types";
 import { type ParsedAuthToken } from "../auth/schemas";
-import { db } from "@/db";
-import { stats } from "@/db/leagues.sql";
 
 export const createYahooClient = (token: string) => {
   const yf = new YahooFantasy(
@@ -121,4 +119,24 @@ export async function getLeagueStatsFromYahoo(
   }, []);
 
   return league_stats;
+}
+
+export async function getUpcomingMatchups(
+  user: ParsedAuthToken,
+  league_key: string,
+  current_week: number,
+) {
+  const yf = createYahooClient(user.properties.access);
+  const scoreboard = await yf.league.scoreboard(league_key, current_week + 1);
+  const matchups = scoreboard.scoreboard.matchups.map((m: any) => ({
+    home: m.teams[0],
+    away: m.teams[1],
+  }));
+  return matchups;
+}
+
+export async function getStandings(user: ParsedAuthToken, league_key: string) {
+  const yf = createYahooClient(user.properties.access);
+  const standings = await yf.league.standings(league_key);
+  return standings;
 }

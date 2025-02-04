@@ -89,8 +89,8 @@ export default function DataTable<TData, TValue>({
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
                 className={cn(
-                  row.getValue("team_id") === teamId &&
-                    "bg-primary dark:bg-primary",
+                  row.getValue("team_id") == teamId &&
+                    "bg-primary dark:bg-primary/40",
                 )}
               >
                 {row.getVisibleCells().map((cell) => (

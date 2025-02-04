@@ -34,8 +34,8 @@ export default async function Layout({ children }: { children: ReactNode }) {
             <Menu />
           </SidebarTrigger>
         </div>
-        <div className=" flex-1 w-full flex flex-col items-center">
-          <div className="w-full pr-5 pb-5 m-20">{children}</div>
+        <div className="m-14 flex-1 w-full flex-col items-center">
+          {children}
         </div>
       </SidebarProvider>
     </main>

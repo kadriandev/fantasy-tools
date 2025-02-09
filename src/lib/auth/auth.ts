@@ -37,7 +37,7 @@ export async function getUserJWT(): Promise<ParsedAuthToken> {
 
   if (!access_token) {
     const refresh_token = cookies.get("refresh_token");
-    const res = await client.verify(subjects, refresh_token?.value!);
+    const res = await client.verify(subjects, refresh_token?.value ?? "");
     if (!res.err && res.tokens) {
       setTokens(res.tokens);
       const jwt = decodeJwt(res.tokens.access);

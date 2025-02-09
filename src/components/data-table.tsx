@@ -33,7 +33,7 @@ export default function DataTable<TData, TValue>({
   teamId,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+  const [columnVisibility, _] = useState<VisibilityState>({
     team_id: false,
   });
 

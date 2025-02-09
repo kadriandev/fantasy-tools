@@ -3,7 +3,7 @@ import { kv } from "@/lib/kv";
 import { syncStripeDataToKV } from "@/lib/stripe/sync-stripe-data-to-kv";
 import { redirect } from "next/navigation";
 
-export async function GET(req: Request) {
+export async function GET(_: Request) {
   const user = await auth();
   if (!user) return redirect("/");
 

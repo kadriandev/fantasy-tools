@@ -45,7 +45,7 @@ export type YahooLeagueScoreboard = {
         waiver_priority: number;
         number_of_moves: number;
         number_of_trades: number;
-        roster_adds: [Object];
+        roster_adds: [object];
         league_scoring_type: string;
         has_draft_grade: number;
         auction_budget_total: string;

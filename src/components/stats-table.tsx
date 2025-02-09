@@ -50,7 +50,7 @@ export default function StatsTable({
         });
       setData(data);
     }
-  }, [stats, week]);
+  }, [stats, week, current_stats]);
 
   return (
     <>

@@ -26,7 +26,7 @@ export default async function AccountPage() {
 
   async function createCheckout(values: FormData) {
     "use server";
-    const priceId = values.get("priceId")?.toString()!;
+    const priceId = values.get("priceId")?.toString() ?? "";
     await createStripeCheckout({ priceId });
   }
 

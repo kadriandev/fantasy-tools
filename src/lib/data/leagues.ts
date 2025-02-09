@@ -31,7 +31,7 @@ export async function refreshLeagues() {
       }
       await Promise.all(promises);
     } catch (e) {
-      console.warn("WARNING: Conlict on insert to user_to_league");
+      console.warn("WARNING: Conlict on insert to user_to_league", e);
     }
 
     await tx

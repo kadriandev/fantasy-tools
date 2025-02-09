@@ -12,8 +12,8 @@ export const processStatChartData = (
   return categories
     .filter((c) => !c.is_only_display_stat)
     .map((c) => {
-      let data = statData!.map((week) => {
-        let week_stat_data = week.reduce((acc, curr) => {
+      const data = statData!.map((week) => {
+        const week_stat_data = week.reduce((acc, curr) => {
           const stat = (
             curr.stats as Array<{
               stat_id: string;
@@ -23,12 +23,12 @@ export const processStatChartData = (
           return acc + parseFloat(stat);
         }, 0.0);
 
-        let user_stat = week
+        const user_stat = week
           .filter((w) => +w.team_id === userTeamId)[0]
           .stats.find((s) => s.stat_id === c.stat_id.toString())!.value;
 
         if (compareToTeam !== "league") {
-          let comparison_stat = week
+          const comparison_stat = week
             .filter((w) => w.team_name === compareToTeam)[0]
             .stats.find((s) => s.stat_id === c.stat_id.toString())!.value;
           return {
@@ -78,8 +78,8 @@ export const processRadarChartData = (
           ? statValue(a, c) - statValue(b, c)
           : statValue(b, c) - statValue(a, c);
 
-      let thisWeek = [...statData[0]].sort(sortStat);
-      let compareWeek = [...statData[1]].sort(sortStat);
+      const thisWeek = [...statData[0]].sort(sortStat);
+      const compareWeek = [...statData[1]].sort(sortStat);
 
       if (compareToTeam === "league")
         return {

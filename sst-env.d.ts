@@ -28,6 +28,10 @@ declare module "sst" {
       "bastion": string
       "type": "sst.aws.Vpc"
     }
+    "MyWeb": {
+      "type": "sst.aws.Nextjs"
+      "url": string
+    }
     "STRIPE_PRODUCT_ID": {
       "type": "sst.sst.Secret"
       "value": string

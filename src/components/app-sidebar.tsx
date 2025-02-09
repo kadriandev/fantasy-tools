@@ -1,5 +1,5 @@
 import { BarChart2, RefreshCw } from "lucide-react";
-import { baseball, basketball, football } from "@lucide/lab";
+// import { baseball, basketball, football } from "@lucide/lab";
 
 import {
   Sidebar,

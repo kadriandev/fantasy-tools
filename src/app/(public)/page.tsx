@@ -74,8 +74,8 @@ export default function Page() {
               </CardHeader>
               <CardContent>
                 <p>
-                  Understand your league's dynamics, track opponent strategies,
-                  and identify market inefficiencies.
+                  Understand your league&apos;s dynamics, track opponent
+                  strategies, and identify market inefficiencies.
                 </p>
               </CardContent>
             </Card>
@@ -108,8 +108,8 @@ export default function Page() {
               </div>
               <h3 className="mt-4 text-xl font-semibold">Analyze Your Team</h3>
               <p className="mt-2 text-gray-500 dark:text-gray-400">
-                Get instant insights on your team's strengths, weaknesses, and
-                potential improvements.
+                Get instant insights on your team&apos;s strengths, weaknesses,
+                and potential improvements.
               </p>
             </li>
             <li className="flex flex-col items-center text-center">
@@ -140,8 +140,8 @@ export default function Page() {
               </CardHeader>
               <CardContent>
                 <p>
-                  "FantasyTools has completely transformed my approach to
-                  fantasy sports. The insights are invaluable!"
+                  &quot;FantasyTools has completely transformed my approach to
+                  fantasy sports. The insights are invaluable!&quot;
                 </p>
               </CardContent>
             </Card>
@@ -152,8 +152,9 @@ export default function Page() {
               </CardHeader>
               <CardContent>
                 <p>
-                  "As a newcomer, FantasyTools helped me compete with seasoned
-                  players. It's like having an expert by your side."
+                  &quot;As a newcomer, FantasyTools helped me compete with
+                  seasoned players. It&apos;s like having an expert by your
+                  side.&quot;
                 </p>
               </CardContent>
             </Card>
@@ -164,8 +165,8 @@ export default function Page() {
               </CardHeader>
               <CardContent>
                 <p>
-                  "Even after years of playing, FantasyTools showed me new
-                  strategies and insights I hadn't considered before."
+                  &quot;Even after years of playing, FantasyTools showed me new
+                  strategies and insights I hadn&apos;t considered before.&quot;
                 </p>
               </CardContent>
             </Card>

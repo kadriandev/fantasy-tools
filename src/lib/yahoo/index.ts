@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error Package doesn't have types
 import YahooFantasy from "yahoo-fantasy";
 import { Resource } from "sst";
 import {
@@ -63,7 +63,7 @@ export async function getUserLeaguesFromYahoo(user: ParsedAuthToken) {
     )?.leagues;
     if (!lls) return;
 
-    let new_leagues = [];
+    const new_leagues = [];
     for (const league of lls) {
       const team = teams.teams
         .find((t: any) => t.game_key === game.game_key)
@@ -106,9 +106,9 @@ export async function getLeagueStatsFromYahoo(
     weeksToFetch.map((w) => yf.league.scoreboard(league_key, w)),
   );
 
-  const league_stats = scoreboard_weeks.reduce((acc, curr) => {
-    const teams = curr.scoreboard.matchups.flatMap((m) => m.teams);
-    const stats = teams.map((t) => ({
+  return scoreboard_weeks.reduce((acc: any[], curr: any) => {
+    const teams = curr.scoreboard.matchups.flatMap((m: any) => m.teams);
+    const stats = teams.map((t: any) => ({
       league_key,
       week: +t.points.week,
       team_id: +t.team_id,
@@ -117,8 +117,6 @@ export async function getLeagueStatsFromYahoo(
     }));
     return [...acc, ...stats];
   }, []);
-
-  return league_stats;
 }
 
 export async function getUpcomingMatchups(

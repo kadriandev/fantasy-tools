@@ -20,6 +20,7 @@ export default function LeagueSelector({ leagues }: LeagueSelectorProps) {
 
   function handleChange(league: string) {
     const path = pathname.split("/");
+    path[1] = "leagues";
     path[2] = league;
     router.push(path.join("/"));
   }

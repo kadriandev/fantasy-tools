@@ -65,15 +65,15 @@ export const processRadarChartData = (
 ) => {
   const statData = groupStatsByWeek(stats);
 
-  const statValue = (team, cat: YahooSettingsStatCategory) =>
+  const statValue = (team: any, cat: YahooSettingsStatCategory) =>
     parseFloat(
-      team.stats.find((s) => s.stat_id === cat.stat_id.toString())!.value,
+      team.stats.find((s: any) => s.stat_id === cat.stat_id.toString())!.value,
     );
 
   return categories
     .filter((c) => !c.is_only_display_stat)
     .map(function (c) {
-      const sortStat = (a, b) =>
+      const sortStat = (a: any, b: any) =>
         c.sort_order === "1"
           ? statValue(a, c) - statValue(b, c)
           : statValue(b, c) - statValue(a, c);
@@ -84,14 +84,14 @@ export const processRadarChartData = (
       if (compareToTeam === "league")
         return {
           stat: c.abbr,
-          userTeam: thisWeek.map((t) => t.team_id).indexOf(userTeamId) + 1,
+          userTeam: thisWeek.map((t) => t.team_id).indexOf(+userTeamId) + 1,
           compareTeam:
-            compareWeek.map((t) => t.team_id).indexOf(userTeamId) + 1,
+            compareWeek.map((t) => t.team_id).indexOf(+userTeamId) + 1,
         };
       else {
         return {
           stat: c.abbr,
-          userTeam: thisWeek.map((t) => t.team_id).indexOf(userTeamId) + 1,
+          userTeam: thisWeek.map((t) => t.team_id).indexOf(+userTeamId) + 1,
           compareTeam: thisWeek.map((t) => t.name).indexOf(compareToTeam) + 1,
         };
       }

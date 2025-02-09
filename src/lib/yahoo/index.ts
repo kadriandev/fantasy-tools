@@ -47,7 +47,7 @@ export async function getUserLeaguesFromYahoo(user: ParsedAuthToken) {
   const all_leagues = [];
   const yf = createYahooClient(user.properties.access);
   const games = await yf.user.games();
-  const active_games = games.games.filter((game) => !game.is_game_over);
+  const active_games = games.games.filter((game: any) => !game.is_game_over);
 
   for (const game of active_games) {
     const teams_promise: Promise<any> = yf.user.game_teams(game.game_key);
@@ -59,15 +59,15 @@ export async function getUserLeaguesFromYahoo(user: ParsedAuthToken) {
     ]);
 
     const lls = game_leagues.games.find(
-      (g) => g.game_key === game.game_key,
+      (g: any) => g.game_key === game.game_key,
     )?.leagues;
     if (!lls) return;
 
     let new_leagues = [];
     for (const league of lls) {
       const team = teams.teams
-        .find((t) => t.game_key === game.game_key)
-        ?.teams.find((t) => t.team_key.startsWith(league.league_key));
+        .find((t: any) => t.game_key === game.game_key)
+        ?.teams.find((t: any) => t.team_key.startsWith(league.league_key));
 
       const settings: YahooLeagueSettings = await yf.league.settings(
         league.league_key,

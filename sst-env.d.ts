@@ -17,13 +17,32 @@ declare module "sst" {
       "type": "sst.aws.Postgres"
       "username": string
     }
+    "MyRedis": {
+      "host": string
+      "password": string
+      "port": number
+      "type": "sst.aws.Redis"
+      "username": string
+    }
     "MyVpc": {
       "bastion": string
       "type": "sst.aws.Vpc"
     }
-    "MyWeb": {
-      "type": "sst.aws.Nextjs"
-      "url": string
+    "STRIPE_PRODUCT_ID": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "STRIPE_PUBLISHABLE_KEY": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "STRIPE_SECRET_KEY": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "STRIPE_WEBHOOK_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
     "YAHOO_CLIENT_ID": {
       "type": "sst.sst.Secret"

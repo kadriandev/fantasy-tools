@@ -1,0 +1,37 @@
+services:
+ postgres:
+  image: "postgres:16.4"
+  ports:
+   - "5432:5432"
+  volumes:
+   - ./.sst/storage/postgres:/var/lib/postgresql/data
+  environment:
+   - POSTGRES_PASSWORD="password"
+   - POSTGRES_USER="postgres"
+   - POSTGRES_DB="local"
+ redis:
+  image: "redis:latest"
+  ports:
+   - 6379:6379
+  volumes:
+   - ./.sst/storage/redis:/data
+  links:
+   - redis-commander
+  networks:
+   - redis_network
+
+ redis-commander:
+  image: rediscommander/redis-commander:latest
+  restart: always
+  environment:
+    REDIS_HOSTS: redis
+    REDIS_HOST: redis
+    REDIS_PORT: redis:6379
+  ports:
+    - 8081:8081
+  networks:
+   - redis_network
+
+networks:
+  redis_network:
+    driver: bridge

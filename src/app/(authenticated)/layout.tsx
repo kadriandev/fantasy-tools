@@ -18,6 +18,7 @@ export default async function Layout({ children }: { children: ReactNode }) {
   // Get user and check if last updated date is before last monday
   // If so, then refresh user leagues to get updated info
   const user = await getUser(subject.properties.sub);
+
   const mostRecentMonday = getPastMonday();
   if (!user[0].last_updated || user[0].last_updated < mostRecentMonday) {
     await refreshLeagues();

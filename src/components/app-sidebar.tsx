@@ -21,12 +21,13 @@ import { Button } from "./ui/button";
 import LeagueSelector from "./league-selector";
 import AppLink from "./app-link";
 import { refreshLeagues } from "@/lib/data/leagues";
+import { getSubTier } from "@/lib/stripe/get-sub-tier";
 
 const routes = [
-  { name: "League Info", route: "" },
-  { name: "Standings", route: "standings" },
-  { name: "Stats", route: "stats" },
-  { name: "Trends", route: "trends" },
+  { name: "League Info", route: "", free: true },
+  { name: "Standings", route: "standings", free: true },
+  { name: "Stats", route: "stats", free: true },
+  { name: "Trends", route: "trends", free: false },
 ];
 
 interface AppSidebarProps {
@@ -40,6 +41,7 @@ interface AppSidebarProps {
   }[];
 }
 export async function AppSidebar({ leagues }: AppSidebarProps) {
+  const tier = await getSubTier();
   return (
     <>
       <Sidebar>
@@ -73,7 +75,12 @@ export async function AppSidebar({ leagues }: AppSidebarProps) {
             <SidebarGroupContent>
               <SidebarMenu suppressHydrationWarning>
                 {routes.map((r) => (
-                  <AppLink key={r.name} appName={r.name} stub={r.route} />
+                  <AppLink
+                    key={r.name}
+                    appName={r.name}
+                    stub={r.route}
+                    disabled={!r.free && tier !== null}
+                  />
                 ))}
               </SidebarMenu>
             </SidebarGroupContent>

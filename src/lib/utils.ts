@@ -14,3 +14,11 @@ export function getPastMonday() {
 export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export function tryCatch<T>(
+  promise: Promise<T>,
+): Promise<{ error: false; data: T } | { error: any }> {
+  return promise
+    .then((data) => ({ error: false, data }))
+    .catch((error) => ({ error }));
+}

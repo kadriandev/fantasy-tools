@@ -105,7 +105,9 @@ export default async function LeagueInfoPage({ params }: LeagueInfoPageProps) {
                 <li key={index} className="flex justify-between items-center">
                   <span className="truncate w-3/5">{matchup.home.name}</span>
                   <span className="text-muted-foreground">vs</span>
-                  <span className="truncate w-3/5">{matchup.away.name}</span>
+                  <span className="text-right truncate w-3/5">
+                    {matchup.away.name}
+                  </span>
                 </li>
               ))}
             </ul>

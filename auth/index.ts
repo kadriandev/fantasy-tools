@@ -24,8 +24,6 @@ async function getUser(access_token: string) {
 
 const app = issuer({
   subjects,
-  // Remove after setting custom domain
-  allow: async () => true,
   providers: {
     yahoo: YahooProvider({
       clientID: Resource.YAHOO_CLIENT_ID.value,

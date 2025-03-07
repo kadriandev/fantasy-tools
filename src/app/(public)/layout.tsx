@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ReactNode } from "react";
 
 export default async function Layout({ children }: { children: ReactNode }) {
-  const subject = await auth();
+  // const subject = await auth();
   return (
     <>
       <header className="w-full p-3">
@@ -19,13 +19,13 @@ export default async function Layout({ children }: { children: ReactNode }) {
           </span>
           <span className="flex gap-3 items-center">
             <ThemeSwitcher />
-            {!subject ? (
-              <Button onClick={login}>Sign In With Yahoo</Button>
-            ) : (
-              <Button variant="outline">
-                <Link href="/leagues">Go to App</Link>
-              </Button>
-            )}
+            {/* {!subject ? ( */}
+            <Button onClick={login}>Sign In With Yahoo</Button>
+            {/* ) : ( */}
+            {/*   <Button variant="outline"> */}
+            {/*     <Link href="/leagues">Go to App</Link> */}
+            {/*   </Button> */}
+            {/* )} */}
           </span>
         </nav>
       </header>

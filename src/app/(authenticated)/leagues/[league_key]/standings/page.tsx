@@ -6,7 +6,7 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { getUserJWT } from "@/lib/auth/auth";
+import { auth } from "@/lib/auth/actions";
 import { getUsersTeamId } from "@/lib/data/users";
 import { cn } from "@/lib/utils";
 import { createYahooClient } from "@/lib/yahoo";
@@ -17,14 +17,13 @@ interface StandingsPageProps {
 
 export default async function StandingsPage({ params }: StandingsPageProps) {
   const { league_key } = await params;
-  const user = await getUserJWT();
-  const yf = createYahooClient(user.properties.access);
+  const user = await auth();
+  const yf = createYahooClient(user.access);
 
   const [teamId, standings] = await Promise.all([
     getUsersTeamId(user, league_key),
     yf.league.standings(league_key),
   ]);
-  console.log(standings);
 
   return (
     <div className="mx-auto max-w-[90vw]">

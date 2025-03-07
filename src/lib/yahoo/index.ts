@@ -6,7 +6,7 @@ import {
   YahooLeagueScoreboard,
   YahooLeagueSettings,
 } from "./types";
-import { type ParsedAuthToken } from "../auth/schemas";
+import { UserSubject } from "../../../auth/subjects";
 
 export const createYahooClient = (token: string) => {
   const yf = new YahooFantasy(
@@ -18,10 +18,10 @@ export const createYahooClient = (token: string) => {
 };
 
 export const getCurrentWeekStats = async (
-  user: ParsedAuthToken,
+  user: UserSubject,
   league_key: string,
 ): Promise<Array<FantasyStats>> => {
-  const yf = createYahooClient(user.properties.access);
+  const yf = createYahooClient(user.access);
 
   const scoreboard: YahooLeagueScoreboard =
     await yf.league.scoreboard(league_key);
@@ -43,10 +43,16 @@ export const getCurrentWeekStats = async (
       return res;
     });
 };
-export async function getUserLeaguesFromYahoo(user: ParsedAuthToken) {
+export async function getUserLeaguesFromYahoo(user: UserSubject) {
   const all_leagues = [];
-  const yf = createYahooClient(user.properties.access);
+  const yf = createYahooClient(user.access);
+
   const games = await yf.user.games();
+  if (games.error) {
+    console.error("Error fetching from yahoo fantasy api.");
+    return [];
+  }
+
   const active_games = games.games.filter((game: any) => !game.is_game_over);
 
   for (const game of active_games) {
@@ -74,7 +80,7 @@ export async function getUserLeaguesFromYahoo(user: ParsedAuthToken) {
       );
 
       new_leagues.push({
-        user_id: user.properties.sub,
+        user_id: user.sub,
         league_key: league.league_key,
         name: league.name,
         num_teams: league.num_teams,
@@ -91,12 +97,12 @@ export async function getUserLeaguesFromYahoo(user: ParsedAuthToken) {
 }
 
 export async function getLeagueStatsFromYahoo(
-  user: ParsedAuthToken,
+  user: UserSubject,
   league_key: string,
   week: number,
   unsavedWeeks: number,
 ) {
-  const yf = createYahooClient(user.properties.access);
+  const yf = createYahooClient(user.access);
 
   const weeksToFetch = Array(unsavedWeeks)
     .fill(week ?? 0)
@@ -120,11 +126,11 @@ export async function getLeagueStatsFromYahoo(
 }
 
 export async function getUpcomingMatchups(
-  user: ParsedAuthToken,
+  user: UserSubject,
   league_key: string,
   current_week: number,
 ) {
-  const yf = createYahooClient(user.properties.access);
+  const yf = createYahooClient(user.access);
   const scoreboard = await yf.league.scoreboard(league_key, current_week + 1);
   const matchups = scoreboard.scoreboard.matchups.map((m: any) => ({
     home: m.teams[0],
@@ -133,8 +139,8 @@ export async function getUpcomingMatchups(
   return matchups;
 }
 
-export async function getStandings(user: ParsedAuthToken, league_key: string) {
-  const yf = createYahooClient(user.properties.access);
+export async function getStandings(user: UserSubject, league_key: string) {
+  const yf = createYahooClient(user.access);
   const standings = await yf.league.standings(league_key);
   return standings;
 }

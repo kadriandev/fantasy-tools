@@ -3,10 +3,10 @@ import { createStatTableColumns } from "./columns";
 import StatsTable from "@/components/stats-table";
 import { DBFantasyStats, YahooSettingsStatCategory } from "@/lib/yahoo/types";
 import { getCurrentWeekStats } from "@/lib/yahoo";
-import { getUserJWT } from "@/lib/auth/auth";
 import { getUsersTeamId } from "@/lib/data/users";
 import { getLeagueCategories } from "@/lib/data/leagues";
 import { getLeagueStats } from "@/lib/data/stats";
+import { auth } from "@/lib/auth/actions";
 
 type PageProps = {
   params: Promise<{ league_key: string }>;
@@ -14,7 +14,7 @@ type PageProps = {
 
 export default async function StatsPage({ params }: PageProps) {
   const { league_key } = await params;
-  const user = await getUserJWT();
+  const user = await auth();
 
   const [userTeamId, cats, stats, current_stats] = await Promise.all([
     getUsersTeamId(user, league_key),

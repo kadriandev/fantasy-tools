@@ -5,14 +5,13 @@ import { leagues, user_to_league } from "@/db/leagues.sql";
 import { eq, sql } from "drizzle-orm";
 import { users } from "@/db/users.sql";
 import { getUserLeaguesFromYahoo } from "../yahoo";
-import { getUserJWT } from "../auth/auth";
+import { auth } from "../auth/actions";
 
 export async function refreshLeagues() {
   return db.transaction(async (tx) => {
-    const user = await getUserJWT();
-
+    const user = await auth();
     const user_leagues = await getUserLeaguesFromYahoo(user);
-    if (!user_leagues) return;
+    if (!user_leagues || !user_leagues.length) return;
 
     await tx.insert(leagues).values(user_leagues).onConflictDoNothing();
 
@@ -37,7 +36,7 @@ export async function refreshLeagues() {
     await tx
       .update(users)
       .set({ last_updated: sql`NOW()` })
-      .where(eq(users.user_id, user.properties.sub));
+      .where(eq(users.user_id, user.sub));
   });
 }
 

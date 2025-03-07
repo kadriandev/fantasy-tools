@@ -5,11 +5,11 @@
 
 declare module "sst" {
   export interface Resource {
-    "MyAuth": {
+    "Auth": {
       "type": "sst.aws.Auth"
       "url": string
     }
-    "MyDatabase": {
+    "Postgres": {
       "database": string
       "host": string
       "password": string
@@ -17,20 +17,12 @@ declare module "sst" {
       "type": "sst.aws.Postgres"
       "username": string
     }
-    "MyRedis": {
+    "Redis": {
       "host": string
       "password": string
       "port": number
       "type": "sst.aws.Redis"
       "username": string
-    }
-    "MyVpc": {
-      "bastion": string
-      "type": "sst.aws.Vpc"
-    }
-    "MyWeb": {
-      "type": "sst.aws.Nextjs"
-      "url": string
     }
     "STRIPE_PRODUCT_ID": {
       "type": "sst.sst.Secret"
@@ -47,6 +39,10 @@ declare module "sst" {
     "STRIPE_WEBHOOK_SECRET": {
       "type": "sst.sst.Secret"
       "value": string
+    }
+    "Web": {
+      "type": "sst.aws.Nextjs"
+      "url": string
     }
     "YAHOO_CLIENT_ID": {
       "type": "sst.sst.Secret"

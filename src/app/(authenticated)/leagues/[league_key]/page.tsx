@@ -11,10 +11,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { createYahooClient, getUpcomingMatchups } from "@/lib/yahoo";
-import { getUserJWT } from "@/lib/auth/auth";
 import Timeline from "@/components/ui/timeline";
 import { createLeagueEvents } from "./utils";
 import AppButtonLink from "@/components/app-button-link";
+import { auth } from "@/lib/auth/actions";
 
 export const metadata: Metadata = {
   title: "Fantasy League Information",
@@ -27,8 +27,9 @@ interface LeagueInfoPageProps {
 
 export default async function LeagueInfoPage({ params }: LeagueInfoPageProps) {
   const { league_key } = await params;
-  const user = await getUserJWT();
-  const yf = createYahooClient(user.properties.access);
+  const subject = await auth();
+
+  const yf = createYahooClient(subject.access);
   const [meta, settings, standings] = await Promise.all([
     yf.league.meta(league_key),
     yf.league.settings(league_key),
@@ -36,7 +37,7 @@ export default async function LeagueInfoPage({ params }: LeagueInfoPageProps) {
   ]);
 
   const matchups = await getUpcomingMatchups(
-    user,
+    subject,
     league_key,
     settings.current_week,
   );

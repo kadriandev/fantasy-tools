@@ -21,6 +21,8 @@ export const userSchema = z.object({
   access: z.string(),
 });
 
+export type UserSubject = z.infer<typeof userSchema>;
+
 export const subjects = createSubjects({
   user: userSchema,
 });

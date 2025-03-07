@@ -1,6 +1,6 @@
 import { Stripe } from "stripe";
 import { stripe } from "./stripe";
-import { kv } from "../kv";
+import { getRedisClient } from "../kv";
 
 export type STRIPE_SUB_CACHE =
   | {
@@ -20,6 +20,7 @@ export type STRIPE_SUB_CACHE =
     };
 // The contents of this function should probably be wrapped in a try/catch
 export async function syncStripeDataToKV(customerId: string) {
+  const kv = getRedisClient();
   // Fetch latest subscription data from Stripe
   const subscriptions = await stripe.subscriptions.list({
     customer: customerId,

@@ -1,10 +1,10 @@
 import { createYahooClient } from ".";
 import { DBFantasyStats, YahooLeagueScoreboard } from "./types";
-import { getUserJWT } from "../auth/auth";
+import { auth } from "../auth/actions";
 
 export const getMatchupTeamId = async (league_key: string, team_id: string) => {
-  const user = await getUserJWT();
-  const yf = createYahooClient(user.properties.access);
+  const user = await auth();
+  const yf = createYahooClient(user.access);
 
   const scoreboard = (await yf.league.scoreboard(
     league_key,

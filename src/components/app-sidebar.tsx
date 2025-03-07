@@ -1,4 +1,7 @@
-import { BarChart2, RefreshCw } from "lucide-react";
+"use client";
+
+import { version } from "../../package.json";
+import { BarChart2, Lock, RefreshCw } from "lucide-react";
 // import { baseball, basketball, football } from "@lucide/lab";
 
 import {
@@ -18,37 +21,42 @@ import Link from "next/link";
 import { ThemeSwitcher } from "./theme-switcher";
 import { logout } from "@/lib/auth/actions";
 import { Button } from "./ui/button";
-import LeagueSelector from "./league-selector";
-import AppLink from "./app-link";
 import { refreshLeagues } from "@/lib/data/leagues";
-import { getSubTier } from "@/lib/stripe/get-sub-tier";
-
-const routes = [
-  { name: "League Info", route: "", free: true },
-  { name: "Standings", route: "standings", free: true },
-  { name: "Stats", route: "stats", free: true },
-  { name: "Trends", route: "trends", free: false },
-];
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 interface AppSidebarProps {
-  leagues: {
-    league_name: string;
-    league_key: string;
-    url: string;
-    game: string;
-    categories: unknown;
-    num_teams: number;
-  }[];
+  tier: any | null;
+  routes: { name: string; route: string; free: boolean }[];
+  leagues: { league_key: string; league_name: string }[];
 }
-export async function AppSidebar({ leagues }: AppSidebarProps) {
-  const tier = await getSubTier();
+export function AppSidebar({ tier, routes, leagues }: AppSidebarProps) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const [league_key, setLeagueKey] = useState(leagues[0].league_key);
+
+  useEffect(() => {
+    if (pathname.startsWith("/leagues")) {
+      const paths = pathname.split("/");
+      paths[2] = league_key;
+      router.replace(paths.join("/"));
+    }
+  }, [league_key]);
+
   return (
     <>
       <Sidebar>
         <SidebarHeader className="m-2 text-xl font-bold text-primary">
           <Link href="/leagues" className="flex gap-2">
             <BarChart2 className="h-6 w-6" />
-            Fantasy Pro
+            Fantasy Tools
           </Link>
         </SidebarHeader>
         <SidebarContent className="px-2">
@@ -62,7 +70,21 @@ export async function AppSidebar({ leagues }: AppSidebarProps) {
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <LeagueSelector leagues={leagues!} />
+                  <Select
+                    defaultValue={league_key}
+                    onValueChange={setLeagueKey}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {leagues.map((l) => (
+                        <SelectItem key={l.league_key} value={l.league_key}>
+                          {l.league_name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </SidebarMenuItem>
               </SidebarMenu>
             </SidebarGroupContent>
@@ -75,12 +97,17 @@ export async function AppSidebar({ leagues }: AppSidebarProps) {
             <SidebarGroupContent>
               <SidebarMenu suppressHydrationWarning>
                 {routes.map((r) => (
-                  <AppLink
-                    key={r.name}
-                    appName={r.name}
-                    stub={r.route}
-                    disabled={!r.free && tier !== null}
-                  />
+                  <Link
+                    key={r.route}
+                    href={`/leagues/${league_key}/${r.route}`}
+                  >
+                    <SidebarMenuItem>
+                      <SidebarMenuButton disabled={!r.free && !tier}>
+                        {!r.free && !tier && <Lock />}
+                        {r.name}
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </Link>
                 ))}
               </SidebarMenu>
             </SidebarGroupContent>
@@ -107,7 +134,7 @@ export async function AppSidebar({ leagues }: AppSidebarProps) {
             <Button variant="outline" onClick={logout}>
               Sign Out
             </Button>
-            <p className="text-muted-foreground text-xs">Version: 0.1.0</p>
+            <p className="text-muted-foreground text-xs">Version: {version}</p>
           </SidebarGroup>
         </SidebarFooter>
       </Sidebar>

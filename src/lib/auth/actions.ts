@@ -2,16 +2,16 @@
 
 import { redirect } from "next/navigation";
 import { headers as getHeaders, cookies as getCookies } from "next/headers";
-import { subjects } from "../../../auth/subjects";
+import { subjects, UserSubject } from "../../../auth/subjects";
 import { client, setTokens } from "./auth";
 
-export async function auth() {
+export async function auth(): Promise<UserSubject> {
   const cookies = await getCookies();
   const accessToken = cookies.get("access_token");
   const refreshToken = cookies.get("refresh_token");
 
   if (!accessToken) {
-    return false;
+    return redirect("/");
   }
 
   const verified = await client.verify(subjects, accessToken.value, {
@@ -19,13 +19,13 @@ export async function auth() {
   });
 
   if (verified.err) {
-    return false;
+    return redirect("/");
   }
   if (verified.tokens) {
     await setTokens(verified.tokens);
   }
 
-  return verified.subject;
+  return verified.subject.properties as UserSubject;
 }
 
 export async function login() {

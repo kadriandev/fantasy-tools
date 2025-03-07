@@ -3,12 +3,15 @@ import { Pool } from "pg";
 import { Resource } from "sst";
 
 const pool = new Pool({
-  database: Resource.MyDatabase.database,
-  host: Resource.MyDatabase.host,
-  port: Resource.MyDatabase.port,
-  user: Resource.MyDatabase.username,
-  password: Resource.MyDatabase.password,
-  ssl: Resource.App.stage !== "kylemonteiro" ? true : false,
+  database: Resource.Postgres.database,
+  host: Resource.Postgres.host,
+  port: Resource.Postgres.port,
+  user: Resource.Postgres.username,
+  password: Resource.Postgres.password,
+  ssl:
+    Resource.App.stage === "production"
+      ? { requestCert: true, rejectUnauthorized: false }
+      : false,
 });
 
 export const db = drizzle({ client: pool });

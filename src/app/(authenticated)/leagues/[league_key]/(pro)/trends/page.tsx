@@ -1,11 +1,11 @@
 import { getUsersTeamId } from "@/lib/data/users";
 import TeamGraphs from "./components/team-graphs";
-import { getUserJWT } from "@/lib/auth/auth";
 import { groupStatsByWeek } from "@/lib/yahoo/utils";
 import { getLeagueCategories } from "@/lib/data/leagues";
 import { getLeagueStats } from "@/lib/data/stats";
 import { DBFantasyStats } from "@/lib/yahoo/types";
 import { processStatChartData } from "./components/utils";
+import { auth } from "@/lib/auth/actions";
 
 interface TrendsPageProps {
   params: Promise<{ league_key: string }>;
@@ -19,7 +19,7 @@ export default async function TrendsPage({
   const { league_key } = await params;
   const { compareTo } = await searchParams;
 
-  const user = await getUserJWT();
+  const user = await auth();
 
   const [team_id, cats, stats] = await Promise.all([
     getUsersTeamId(user, league_key),

@@ -1,6 +1,6 @@
 "use client";
 
-import { version } from "../../package.json";
+import pkg from "../../package.json";
 import { BarChart2, Lock, RefreshCw } from "lucide-react";
 // import { baseball, basketball, football } from "@lucide/lab";
 
@@ -18,7 +18,6 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-import { ThemeSwitcher } from "./theme-switcher";
 import { logout } from "@/lib/auth/actions";
 import { Button } from "./ui/button";
 import { refreshLeagues } from "@/lib/data/leagues";
@@ -130,11 +129,12 @@ export function AppSidebar({ tier, routes, leagues }: AppSidebarProps) {
             </SidebarGroupContent>
           </SidebarGroup>
           <SidebarGroup className="gap-3">
-            <ThemeSwitcher />
             <Button variant="outline" onClick={logout}>
               Sign Out
             </Button>
-            <p className="text-muted-foreground text-xs">Version: {version}</p>
+            <p className="text-muted-foreground text-xs">
+              Version: {pkg.version}
+            </p>
           </SidebarGroup>
         </SidebarFooter>
       </Sidebar>

@@ -24,6 +24,10 @@ declare module "sst" {
       "type": "sst.aws.Redis"
       "username": string
     }
+    "STRIPE_PORTAL_URL": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
     "STRIPE_PRODUCT_ID": {
       "type": "sst.sst.Secret"
       "value": string

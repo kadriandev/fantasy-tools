@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { StatsChart } from "./stats-chart";
 import TeamSelector from "./team-selector";
 import { useSearchParams } from "next/navigation";
@@ -12,6 +13,7 @@ interface TeamOverviewProps {
 export default function TeamGraphs({ teams, data }: TeamOverviewProps) {
   const searchParams = useSearchParams();
   const compareTeam = searchParams.get("compareTo") ?? "league";
+  const [selected, setSelected] = useState<string>("");
 
   return (
     <>
@@ -36,6 +38,8 @@ export default function TeamGraphs({ teams, data }: TeamOverviewProps) {
             comparisonLabel={
               compareTeam === "league" ? "League Avg." : compareTeam
             }
+            selected={selected === s.abbr}
+            setSelected={setSelected}
           />
         ))}
       </div>

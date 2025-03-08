@@ -14,15 +14,14 @@ export async function createStripeCheckout({
   returnUrl?: string;
 }) {
   const userInfo = await auth();
-  if (!userInfo) redirect("/");
 
-  const existingSub = await getStripeSubByUserId(userInfo.properties.sub);
+  const existingSub = await getStripeSubByUserId(userInfo.sub);
   if (existingSub?.status === "active") {
     throw new Error("You already have an active subscription.");
   }
 
   let stripeCustomerId =
-    (await STRIPE_CUSTOMER_ID_KV.get(userInfo.properties.sub)) ?? undefined;
+    (await STRIPE_CUSTOMER_ID_KV.get(userInfo.sub)) ?? undefined;
   console.log(
     `[Stripe][CheckoutSession] Here's the stripe ID we got from KV`,
     stripeCustomerId,
@@ -34,11 +33,11 @@ export async function createStripeCheckout({
     );
 
     const newCustomer = await stripe.customers.create({
-      email: userInfo.properties.email,
-      metadata: { userId: userInfo.properties.sub },
+      email: userInfo.email,
+      metadata: { userId: userInfo.sub },
     });
 
-    await STRIPE_CUSTOMER_ID_KV.set(userInfo.properties.sub, newCustomer.id);
+    await STRIPE_CUSTOMER_ID_KV.set(userInfo.sub, newCustomer.id);
 
     console.log(`[Stripe][CheckoutSession] CUSTOMER CREATED`, newCustomer);
     stripeCustomerId = newCustomer.id;
@@ -53,7 +52,7 @@ export async function createStripeCheckout({
       cancel_url: getURL(returnUrl),
       subscription_data: {
         metadata: {
-          userId: userInfo.properties.sub,
+          userId: userInfo.sub,
         },
       },
       customer: stripeCustomerId,

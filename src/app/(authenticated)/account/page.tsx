@@ -34,46 +34,80 @@ export default async function AccountPage() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold">Subscription Plans</h2>
-      <p className="uppercase">Current Tier: {sub?.status ?? "Inactive"}</p>
-      <div className="mt-20 flex justify-center gap-8">
-        {prices
-          .sort((a, b) => a.unit_amount! - b.unit_amount!)
-          .map((p) => (
-            <Card key={p.id} className="min-w-1/3">
-              <CardHeader>
-                <CardTitle>{p.metadata.name}</CardTitle>
-              </CardHeader>
-              <CardContent className="h-32">
-                <span className="text-5xl font-extrabold tracking-tight">
-                  ${(p.unit_amount! / 100).toFixed(2)}
-                </span>
-                {p.recurring?.interval === "year" && (
-                  <p className="mt-2 text-sm text-gray-500">
-                    Billed annually (Save{" "}
-                    {(
-                      (((monthlyPrice! / 100) * 12 - p.unit_amount! / 100) /
-                        ((monthlyPrice! / 100) * 12)) *
-                      100
-                    ).toFixed(0)}
-                    %)
-                  </p>
+      <h2 className="text-2xl font-bold">Account</h2>
+      <div className="mt-14">
+        {sub?.status ? (
+          <Card>
+            <CardHeader>
+              <CardTitle>You're Subscribed!</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>
+                The current billing cycle started on{" "}
+                {new Date(sub.currentPeriodStart! * 1000).toLocaleDateString(
+                  "en-US",
                 )}
-              </CardContent>
-              <CardFooter>
-                {sub?.priceId !== p.id ? (
-                  <form action={createCheckout}>
-                    <input type="hidden" name="priceId" value={p.id} />
-                    <Button type="submit">Select Plan</Button>
-                  </form>
-                ) : (
-                  <Link href="https://billing.stripe.com/p/login/test_6oEaFefAlfL8bZe8ww">
-                    <Button variant="outline">Manage Subscription</Button>
-                  </Link>
-                )}
-              </CardFooter>
-            </Card>
-          ))}
+                .
+              </p>
+              <p className="mt-4">
+                Click here to view, make changes, or cancel your subscription.
+              </p>
+              {sub.cancelAtPeriodEnd && (
+                <p>
+                  Your subscription will end at the end of the current billing
+                  cycle.
+                </p>
+              )}
+            </CardContent>
+            <CardFooter>
+              <Button variant={"outline"}>
+                <Link href={Resource.STRIPE_PORTAL_URL.value}>
+                  Manage Subscription
+                </Link>
+              </Button>
+            </CardFooter>
+          </Card>
+        ) : (
+          <div className="mt-20 flex justify-center gap-8">
+            {prices
+              .sort((a, b) => a.unit_amount! - b.unit_amount!)
+              .map((p) => (
+                <Card key={p.id} className="min-w-1/3">
+                  <CardHeader>
+                    <CardTitle>{p.metadata.name}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="h-32">
+                    <span className="text-5xl font-extrabold tracking-tight">
+                      ${(p.unit_amount! / 100).toFixed(2)}
+                    </span>
+                    {p.recurring?.interval === "year" && (
+                      <p className="mt-2 text-sm text-gray-500">
+                        Billed annually (Save{" "}
+                        {(
+                          (((monthlyPrice! / 100) * 12 - p.unit_amount! / 100) /
+                            ((monthlyPrice! / 100) * 12)) *
+                          100
+                        ).toFixed(0)}
+                        %)
+                      </p>
+                    )}
+                  </CardContent>
+                  <CardFooter>
+                    {sub?.priceId !== p.id ? (
+                      <form action={createCheckout}>
+                        <input type="hidden" name="priceId" value={p.id} />
+                        <Button type="submit">Select Plan</Button>
+                      </form>
+                    ) : (
+                      <Link href={Resource.STRIPE_PORTAL_URL.value}>
+                        <Button variant="outline">Manage Subscription</Button>
+                      </Link>
+                    )}
+                  </CardFooter>
+                </Card>
+              ))}
+          </div>
+        )}
       </div>
     </div>
   );

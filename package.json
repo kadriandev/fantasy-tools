@@ -12,6 +12,7 @@
     "db:generate": "pnpm db generate"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
     "@lucide/lab": "^0.1.2",
     "@openauthjs/openauth": "^0.3.6",
     "@radix-ui/react-dialog": "^1.1.5",

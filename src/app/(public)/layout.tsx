@@ -1,11 +1,11 @@
-import { ThemeSwitcher } from "@/components/theme-switcher";
+// import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Button } from "@/components/ui/button";
-import { auth, login } from "@/lib/auth/actions";
+import { login } from "@/lib/auth/actions";
+import Image from "next/image";
 import Link from "next/link";
 import { ReactNode } from "react";
 
 export default async function Layout({ children }: { children: ReactNode }) {
-  // const subject = await auth();
   return (
     <>
       <header className="w-full p-3">
@@ -18,14 +18,16 @@ export default async function Layout({ children }: { children: ReactNode }) {
             </ul>
           </span>
           <span className="flex gap-3 items-center">
-            <ThemeSwitcher />
-            {/* {!subject ? ( */}
-            <Button onClick={login}>Sign In With Yahoo</Button>
-            {/* ) : ( */}
-            {/*   <Button variant="outline"> */}
-            {/*     <Link href="/leagues">Go to App</Link> */}
-            {/*   </Button> */}
-            {/* )} */}
+            {/* <ThemeSwitcher /> */}
+            <Button className="px-0 rounded-xl" variant="ghost" onClick={login}>
+              <Image
+                src={"/yahoo-sign-in-btn.png"}
+                alt="yahoo sign in button"
+                width={200}
+                height={100}
+                onClick={login}
+              />
+            </Button>
           </span>
         </nav>
       </header>

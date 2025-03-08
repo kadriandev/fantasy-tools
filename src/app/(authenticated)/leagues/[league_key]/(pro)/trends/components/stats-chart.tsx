@@ -1,5 +1,3 @@
-"use client";
-
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import {
   Card,
@@ -14,12 +12,16 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { cn } from "@/lib/utils";
+import { Dispatch, SetStateAction } from "react";
 
 export interface StatsChartProps {
   name: string;
   data: any[];
   comparisonLabel: string;
   desc?: string;
+  selected?: boolean;
+  setSelected: Dispatch<SetStateAction<string>>;
 }
 
 export function StatsChart({
@@ -27,6 +29,8 @@ export function StatsChart({
   data,
   desc,
   comparisonLabel,
+  selected = false,
+  setSelected,
 }: StatsChartProps) {
   const chartConfig = {
     user: {
@@ -45,7 +49,13 @@ export function StatsChart({
   const buffer = isPercent ? 0.1 : 15;
 
   return (
-    <Card>
+    <Card
+      onClick={() => setSelected(selected ? "" : name)}
+      className={cn(
+        "hover:brightness-125 hover:cursor-pointer",
+        selected && "col-span-3 row-span-2",
+      )}
+    >
       <CardHeader>
         <CardTitle>{name}</CardTitle>
         {desc && <CardDescription>{desc}</CardDescription>}

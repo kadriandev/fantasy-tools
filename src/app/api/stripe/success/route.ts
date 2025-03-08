@@ -8,9 +8,7 @@ export async function GET(_: Request) {
   if (!user) return redirect("/");
 
   const kv = getRedisClient();
-  const stripeCustomerId = await kv.get(
-    `user:${user.properties.sub}:stripeCustomerId`,
-  );
+  const stripeCustomerId = await kv.get(`user:${user.sub}:stripeCustomerId`);
 
   if (!stripeCustomerId) {
     return redirect("/");

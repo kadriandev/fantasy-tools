@@ -19,7 +19,7 @@ import {
 } from "./ui/table";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { ArrowDown, ArrowUp } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -69,12 +69,15 @@ export default function DataTable<TData, TValue>({
                             header.column.columnDef.header,
                             header.getContext(),
                           )}
-                      {header.column.getIsSorted() === "asc" && (
-                        <ArrowUp size={20} />
-                      )}
-                      {header.column.getIsSorted() === "desc" && (
-                        <ArrowDown size={20} />
-                      )}
+                      <ArrowUp
+                        size={15}
+                        className={cn(
+                          "invisible transition-transform",
+                          header.column.getIsSorted() === "asc" && "visible",
+                          header.column.getIsSorted() === "desc" &&
+                            "visible rotate-180",
+                        )}
+                      />
                     </span>
                   </TableHead>
                 );

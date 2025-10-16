@@ -1,4 +1,11 @@
-import { integer, jsonb, pgTable, primaryKey, text } from "drizzle-orm/pg-core";
+import {
+  integer,
+  jsonb,
+  pgTable,
+  primaryKey,
+  text,
+  date,
+} from "drizzle-orm/pg-core";
 import { users } from "./users.sql";
 
 export const leagues = pgTable("leagues", {
@@ -9,6 +16,7 @@ export const leagues = pgTable("leagues", {
   game: text().notNull(),
   url: text().notNull(),
   stat_categories: jsonb(),
+  end_date: date(),
 });
 
 export const user_to_league = pgTable(
@@ -23,9 +31,7 @@ export const user_to_league = pgTable(
     team_id: integer().notNull(),
     team_name: text(),
   },
-  (table) => ({
-    pk: primaryKey({ columns: [table.user_id, table.league_key] }),
-  }),
+  (table) => [primaryKey({ columns: [table.user_id, table.league_key] })],
 );
 
 export const stats = pgTable(
@@ -39,9 +45,7 @@ export const stats = pgTable(
     team_name: text(),
     stats: jsonb().notNull(),
   },
-  (table) => ({
-    pk: primaryKey({
-      columns: [table.league_key, table.team_id, table.week],
-    }),
-  }),
+  (table) => [
+    primaryKey({ columns: [table.league_key, table.team_id, table.week] }),
+  ],
 );

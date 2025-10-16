@@ -1,4 +1,4 @@
-import { tryCatch } from "@/lib/utils";
+import { catchError } from "@/lib/utils";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { Resource } from "sst";
@@ -66,7 +66,7 @@ export async function POST(req: Request) {
     waitUntil(processEvent(event));
   }
 
-  const { error } = await tryCatch(doEventProcessing());
+  const [error, _] = await catchError(doEventProcessing());
   if (error) {
     console.error("[STRIPE HOOK] Error processing event", error);
   }

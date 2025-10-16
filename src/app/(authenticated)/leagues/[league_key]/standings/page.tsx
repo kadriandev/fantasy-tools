@@ -40,7 +40,7 @@ export default async function StandingsPage({ params }: StandingsPageProps) {
         <TableBody>
           {standings.standings.map((team: any) => (
             <TableRow
-              key={team.standings.rank}
+              key={team.team_id}
               className={cn(
                 team.team_id == teamId && "bg-primary dark:bg-primary/40",
               )}

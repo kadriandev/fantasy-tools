@@ -15,10 +15,10 @@ export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export function tryCatch<T>(
+export async function catchError<T>(
   promise: Promise<T>,
-): Promise<{ error: false; data: T } | { error: any }> {
+): Promise<[undefined, T] | [Error]> {
   return promise
-    .then((data) => ({ error: false, data }))
-    .catch((error) => ({ error }));
+    .then((data) => [undefined, data] as [undefined, T])
+    .catch((error) => [error]);
 }

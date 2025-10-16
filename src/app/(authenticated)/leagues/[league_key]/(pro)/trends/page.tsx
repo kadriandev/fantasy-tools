@@ -27,6 +27,18 @@ export default async function TrendsPage({
     getLeagueStats(user, league_key),
   ]);
 
+  if (!stats.length) {
+    return (
+      <div>
+        <div className="absolute top-1/2 left-1/2">
+          <p className="text-xl text-muted-foreground">
+            Trends will be available once the season starts.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   const teams = groupStatsByWeek(stats as unknown as DBFantasyStats[])[0]
     .filter((t) => +t.team_id !== team_id)
     .map((t) => t.team_name);

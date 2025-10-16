@@ -73,7 +73,7 @@ export default async function LeagueInfoPage({ params }: LeagueInfoPageProps) {
               </TableHeader>
               <TableBody>
                 {standings.standings.slice(0, 4).map((team: any) => (
-                  <TableRow key={team.standings.rank}>
+                  <TableRow key={team.team_id}>
                     <TableCell>{team.standings.rank}</TableCell>
                     <TableCell>{team.name}</TableCell>
                     <TableCell>
@@ -101,7 +101,7 @@ export default async function LeagueInfoPage({ params }: LeagueInfoPageProps) {
             <CardTitle>Upcoming Matchups</CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="space-y-4">
+            <ul className="mt-6 space-y-4">
               {matchups.map((matchup: any, index: number) => (
                 <li key={index} className="flex justify-between items-center">
                   <span className="truncate w-3/5">{matchup.home.name}</span>

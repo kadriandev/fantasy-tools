@@ -7,6 +7,7 @@ import {
   YahooLeagueSettings,
 } from "./types";
 import { UserSubject } from "../../../auth/subjects";
+import { catchError } from "../utils";
 
 export const createYahooClient = (token: string) => {
   const yf = new YahooFantasy(
@@ -23,8 +24,13 @@ export const getCurrentWeekStats = async (
 ): Promise<Array<FantasyStats>> => {
   const yf = createYahooClient(user.access);
 
-  const scoreboard: YahooLeagueScoreboard =
-    await yf.league.scoreboard(league_key);
+  const [err, scoreboard] = await catchError<YahooLeagueScoreboard>(
+    yf.league.scoreboard(league_key),
+  );
+
+  if (err) {
+    return [];
+  }
 
   return scoreboard.scoreboard.matchups
     .reduce((acc: any[], curr: any) => {
@@ -89,6 +95,7 @@ export async function getUserLeaguesFromYahoo(user: UserSubject) {
         stat_categories: settings.settings.stat_categories,
         team_id: parseInt(team.team_id),
         team_name: team.name as string,
+        end_date: settings.end_date,
       });
     }
     all_leagues.push(...new_leagues);
@@ -131,7 +138,14 @@ export async function getUpcomingMatchups(
   current_week: number,
 ) {
   const yf = createYahooClient(user.access);
-  const scoreboard = await yf.league.scoreboard(league_key, current_week + 1);
+
+  const [err, scoreboard] = await catchError<YahooLeagueScoreboard>(
+    yf.league.scoreboard(league_key, current_week + 1),
+  );
+  if (err) {
+    return [];
+  }
+
   const matchups = scoreboard.scoreboard.matchups.map((m: any) => ({
     home: m.teams[0],
     away: m.teams[1],

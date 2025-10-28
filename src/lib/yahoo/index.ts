@@ -81,9 +81,12 @@ export async function getUserLeaguesFromYahoo(user: UserSubject) {
         .find((t: any) => t.game_key === game.game_key)
         ?.teams.find((t: any) => t.team_key.startsWith(league.league_key));
 
-      const settings: YahooLeagueSettings = await yf.league.settings(
-        league.league_key,
+      const [err, settings] = await catchError<YahooLeagueSettings>(
+        yf.league.settings(league.league_key),
       );
+      if (err) {
+        return [];
+      }
 
       new_leagues.push({
         user_id: user.sub,

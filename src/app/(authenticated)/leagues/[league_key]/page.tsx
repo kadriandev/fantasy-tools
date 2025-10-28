@@ -15,6 +15,9 @@ import Timeline from "@/components/ui/timeline";
 import { createLeagueEvents } from "./utils";
 import AppButtonLink from "@/components/app-button-link";
 import { auth } from "@/lib/auth/actions";
+import { YahooLeagueSettings, YahooLeagueStandings } from "@/lib/yahoo/types";
+import { catchError } from "@/lib/utils";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Fantasy League Information",
@@ -30,11 +33,20 @@ export default async function LeagueInfoPage({ params }: LeagueInfoPageProps) {
   const subject = await auth();
 
   const yf = createYahooClient(subject.access);
-  const [meta, settings, standings] = await Promise.all([
-    yf.league.meta(league_key),
-    yf.league.settings(league_key),
-    yf.league.standings(league_key),
-  ]);
+  const [err, data] = await catchError(
+    Promise.all<[{ name: string }, YahooLeagueSettings, YahooLeagueStandings]>([
+      yf.league.meta(league_key),
+      yf.league.settings(league_key),
+      yf.league.standings(league_key),
+    ]),
+  );
+
+  if (err) {
+    console.log(err);
+    redirect("/leagues");
+  }
+
+  const [meta, settings, standings] = data;
 
   const matchups = await getUpcomingMatchups(
     subject,

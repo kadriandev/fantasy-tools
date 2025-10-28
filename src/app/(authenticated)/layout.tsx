@@ -3,6 +3,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { auth } from "@/lib/auth/actions";
 import { getLeagues } from "@/lib/data/leagues";
 import { getSubTier } from "@/lib/stripe/get-sub-tier";
+import { catchError } from "@/lib/utils";
 import { Menu } from "lucide-react";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
@@ -17,14 +18,20 @@ const routes = [
 export default async function Layout({ children }: { children: ReactNode }) {
   const subject = await auth();
 
-  const [tier, leagues] = await Promise.all([
-    getSubTier(subject.sub),
-    getLeagues(subject.sub),
-  ]);
-
   if (!subject) {
     redirect("/");
   }
+
+  const [err, data] = await catchError(
+    Promise.all([getSubTier(subject.sub), getLeagues(subject.sub)]),
+  );
+
+  if (err) {
+    console.error("Error getting leagues or sub tier");
+    redirect("/");
+  }
+
+  const [tier, leagues] = data;
 
   return (
     <main>

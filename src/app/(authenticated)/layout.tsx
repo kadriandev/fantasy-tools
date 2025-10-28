@@ -22,6 +22,8 @@ export default async function Layout({ children }: { children: ReactNode }) {
     redirect("/");
   }
 
+  console.log(subject);
+
   const [err, data] = await catchError(
     Promise.all([getSubTier(subject.sub), getLeagues(subject.sub)]),
   );

@@ -25,12 +25,14 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   teamId: number;
+  stickyColumnId?: string;
 }
 
 export default function DataTable<TData, TValue>({
   columns,
   data,
   teamId,
+  stickyColumnId,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, _] = useState<VisibilityState>({
@@ -61,6 +63,11 @@ export default function DataTable<TData, TValue>({
                   <TableHead
                     key={header.id}
                     onClick={header.column.getToggleSortingHandler()}
+                    className={`${
+                      stickyColumnId?.includes(header.column.id)
+                        ? "sticky left-0 z-10 shadow-[inset_-2px_0_0_0_rgba(255,255,255,0.8)] dark:shadow-[inset_-2px_0_0_0_rgba(108,117,125,0.5)]"
+                        : ""
+                    }`}
                   >
                     <span className="flex items-center gap-1">
                       {header.isPlaceholder
@@ -93,11 +100,18 @@ export default function DataTable<TData, TValue>({
                 data-state={row.getIsSelected() && "selected"}
                 className={cn(
                   row.getValue("team_id") == teamId &&
-                    "bg-primary dark:bg-primary/40",
+                    "bg-primary dark:bg-primary md:dark:bg-primary/40",
                 )}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell
+                    key={cell.id}
+                    className={`${
+                      stickyColumnId?.includes(cell.column.id ?? "")
+                        ? "sticky left-0 z-10 shadow-[inset_-2px_0_0_0_rgba(255,255,255,0.8)] dark:shadow-[inset_-2px_0_0_0_rgba(108,117,125,0.5)]"
+                        : ""
+                    }`}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

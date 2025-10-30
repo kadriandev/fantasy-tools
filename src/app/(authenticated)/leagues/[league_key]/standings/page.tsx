@@ -27,14 +27,17 @@ export default async function StandingsPage({ params }: StandingsPageProps) {
 
   return (
     <div className="mx-auto max-w-[90vw]">
-      <h1 className="py-4 flex text-xl font-bold">Standings</h1>
+      <h1 className="text-xl ml-12 mt-2 md:ml-0 md:mt-0 font-bold mb-8">
+        Standings
+      </h1>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Rank</TableHead>
+            <TableHead className="w-8">Rank</TableHead>
             <TableHead>Team</TableHead>
             <TableHead>W-L-T</TableHead>
-            <TableHead>Games Behind</TableHead>
+            <TableHead className="hidden md:block">Games Behind</TableHead>
+            <TableHead className="block md:hidden">GB</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -45,7 +48,7 @@ export default async function StandingsPage({ params }: StandingsPageProps) {
                 team.team_id == teamId && "bg-primary dark:bg-primary/40",
               )}
             >
-              <TableCell>{team.standings.rank}</TableCell>
+              <TableCell className="w-8">{team.standings.rank}</TableCell>
               <TableCell>{team.name}</TableCell>
               <TableCell>
                 {team.standings.outcome_totals.wins}-

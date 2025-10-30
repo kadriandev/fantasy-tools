@@ -53,7 +53,7 @@ export function StatsChart({
       onClick={() => setSelected(selected ? "" : name)}
       className={cn(
         "hover:brightness-125 hover:cursor-pointer",
-        selected && "col-span-3 row-span-2",
+        selected && "md:col-span-3 md:row-span-2",
       )}
     >
       <CardHeader>

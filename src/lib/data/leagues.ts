@@ -9,20 +9,20 @@ import { auth } from "../auth/actions";
 import { redirect } from "next/navigation";
 
 export async function refreshLeagues() {
-  return db.transaction(async (tx) => {
-    const user = await auth();
-    const user_leagues = await getUserLeaguesFromYahoo(user);
-    if (!user_leagues || !user_leagues.length) return;
+  const user = await auth();
+  const user_leagues = await getUserLeaguesFromYahoo(user);
+  if (!user_leagues || !user_leagues.length) return;
 
-    await tx
-      .insert(leagues)
-      .values(user_leagues)
-      .onConflictDoUpdate({
-        target: leagues.league_key,
-        set: { end_date: sql.raw(`excluded.${leagues.end_date.name}`) },
-      });
-
+  await db.transaction(async (tx) => {
     try {
+      await tx
+        .insert(leagues)
+        .values(user_leagues)
+        .onConflictDoUpdate({
+          target: leagues.league_key,
+          set: { end_date: sql.raw(`excluded.${leagues.end_date.name}`) },
+        });
+
       const promises = [];
       for (const l of user_leagues) {
         promises.push(
@@ -36,17 +36,18 @@ export async function refreshLeagues() {
         );
       }
       await Promise.all(promises);
+
+      await tx
+        .update(users)
+        .set({ last_updated: sql`NOW()` })
+        .where(eq(users.user_id, user.sub));
     } catch (e) {
       console.warn("WARNING: Conlict on insert to user_to_league", e);
+      tx.rollback();
     }
-
-    await tx
-      .update(users)
-      .set({ last_updated: sql`NOW()` })
-      .where(eq(users.user_id, user.sub));
-
-    redirect("/leagues");
   });
+
+  // redirect("/leagues");
 }
 
 export async function getLeagues(userId: string) {

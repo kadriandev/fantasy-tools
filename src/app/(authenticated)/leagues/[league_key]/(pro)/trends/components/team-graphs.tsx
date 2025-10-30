@@ -18,9 +18,10 @@ export default function TeamGraphs({ teams, data }: TeamOverviewProps) {
   return (
     <>
       <div className="flex items-center">
-        <h1 className="py-4 flex text-xl font-bold">
+        {/* <h1 className="text-xl align-middle ml-12 mt-1 mb-2 md:ml-0 md:py-4 flex font-bold"> */}
+        <h1 className="ml-12 mt-1 flex text-xl font-bold md:ml-0">
           My Team
-          <span className="ml-4 font-light">
+          <span className="hidden md:block ml-4 font-light">
             (vs. {compareTeam === "league" ? "League" : compareTeam})
           </span>
         </h1>
@@ -28,7 +29,7 @@ export default function TeamGraphs({ teams, data }: TeamOverviewProps) {
           <TeamSelector teams={teams} />
         </span>
       </div>
-      <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
         {data.map((s) => (
           <StatsChart
             key={s.stat_id}

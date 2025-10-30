@@ -8,6 +8,7 @@ import {
 } from "./types";
 import { UserSubject } from "../../../auth/subjects";
 import { catchError } from "../utils";
+import { leagues } from "@/db/leagues.sql";
 
 export const createYahooClient = (token: string) => {
   const yf = new YahooFantasy(
@@ -62,18 +63,16 @@ export async function getUserLeaguesFromYahoo(user: UserSubject) {
   const active_games = games.games.filter((game: any) => !game.is_game_over);
 
   for (const game of active_games) {
-    const teams_promise: Promise<any> = yf.user.game_teams(game.game_key);
-    const leagues_promise: Promise<any> = yf.user.game_leagues(game.game_key);
-
     const [teams, game_leagues] = await Promise.all([
-      teams_promise,
-      leagues_promise,
+      yf.user.game_teams(game.game_key),
+      yf.user.game_leagues(game.game_key),
     ]);
 
+    // Check if any game leagues for this game
     const lls = game_leagues.games.find(
       (g: any) => g.game_key === game.game_key,
     )?.leagues;
-    if (!lls) return;
+    if (!lls) continue;
 
     const new_leagues = [];
     for (const league of lls) {
@@ -85,7 +84,7 @@ export async function getUserLeaguesFromYahoo(user: UserSubject) {
         yf.league.settings(league.league_key),
       );
       if (err) {
-        return [];
+        continue;
       }
 
       new_leagues.push({
@@ -101,6 +100,7 @@ export async function getUserLeaguesFromYahoo(user: UserSubject) {
         end_date: settings.end_date,
       });
     }
+
     all_leagues.push(...new_leagues);
   }
   return all_leagues;

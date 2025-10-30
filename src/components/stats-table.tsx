@@ -54,8 +54,8 @@ export default function StatsTable({
 
   return (
     <>
-      <h1 className="py-4 flex text-xl font-bold">
-        Stats
+      <h1 className="text-xl align-middle ml-12 mt-1 mb-2 md:ml-0 md:py-4 flex font-bold">
+        <span className="self-center">Stats</span>
         <span className="ml-auto">
           <Select
             defaultValue="current"
@@ -76,7 +76,12 @@ export default function StatsTable({
         </span>
       </h1>
       <ScrollArea className="h-[500px]">
-        <DataTable teamId={userTeamId!} columns={columns} data={data} />
+        <DataTable
+          teamId={userTeamId!}
+          columns={columns}
+          data={data}
+          stickyColumnId="team_name"
+        />
       </ScrollArea>
     </>
   );

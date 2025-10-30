@@ -16,7 +16,7 @@ export const leagues = pgTable("leagues", {
   game: text().notNull(),
   url: text().notNull(),
   stat_categories: jsonb(),
-  end_date: date(),
+  end_date: date().notNull(),
 });
 
 export const user_to_league = pgTable(
@@ -27,7 +27,7 @@ export const user_to_league = pgTable(
       .references(() => users.user_id),
     league_key: text()
       .notNull()
-      .references(() => leagues.league_key),
+      .references(() => leagues.league_key, { onDelete: "cascade" }),
     team_id: integer().notNull(),
     team_name: text(),
   },
@@ -39,7 +39,7 @@ export const stats = pgTable(
   {
     league_key: text()
       .notNull()
-      .references(() => leagues.league_key),
+      .references(() => leagues.league_key, { onDelete: "cascade" }),
     team_id: integer().notNull(),
     week: integer().notNull(),
     team_name: text(),

@@ -9,13 +9,9 @@ declare module "sst" {
       "type": "sst.aws.Auth"
       "url": string
     }
-    "FantasyToolsVpc": {
-      "bastion": string
-      "type": "sst.aws.Vpc"
-    }
-    "MigratorFn": {
-      "name": string
-      "type": "sst.aws.Function"
+    "DBPassword": {
+      "type": "sst.sst.Secret"
+      "value": string
     }
     "Postgres": {
       "database": string

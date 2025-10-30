@@ -16,6 +16,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { logout } from "@/lib/auth/actions";
@@ -29,7 +30,8 @@ import {
   SelectValue,
 } from "./ui/select";
 import { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { redirect, usePathname, useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 interface AppSidebarProps {
   tier: any | null;
@@ -39,7 +41,9 @@ interface AppSidebarProps {
 export function AppSidebar({ tier, routes, leagues }: AppSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const [league_key, setLeagueKey] = useState(leagues[0].league_key);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [league_key, setLeagueKey] = useState(leagues[0]?.league_key ?? "");
+  const { isMobile, toggleSidebar } = useSidebar();
 
   useEffect(() => {
     if (pathname.startsWith("/leagues")) {
@@ -49,95 +53,110 @@ export function AppSidebar({ tier, routes, leagues }: AppSidebarProps) {
     }
   }, [league_key]);
 
+  const refresh = async () => {
+    setIsRefreshing(true);
+    await refreshLeagues();
+    setIsRefreshing(false);
+    redirect("/leagues");
+  };
+
   return (
-    <>
-      <Sidebar>
-        <SidebarHeader className="m-2 text-xl font-bold text-primary">
-          <Link href="/leagues" className="flex gap-2">
-            <BarChart2 className="h-6 w-6" />
-            Fantasy Tools
-          </Link>
-        </SidebarHeader>
-        <SidebarContent className="px-2">
-          <SidebarGroup>
-            <SidebarGroupLabel className="items-center justify-between my-2">
-              <span>Leagues</span>
-              <Button size="sm" variant={"ghost"} onClick={refreshLeagues}>
-                <RefreshCw />
-              </Button>
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <Select
-                    defaultValue={league_key}
-                    onValueChange={setLeagueKey}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {leagues.map((l) => (
-                        <SelectItem key={l.league_key} value={l.league_key}>
-                          {l.league_name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
+    <Sidebar>
+      <SidebarHeader className="m-2 text-xl font-bold text-primary">
+        <Link href="/leagues" className="flex gap-2">
+          <BarChart2 className="h-6 w-6" />
+          Fantasy Tools
+        </Link>
+      </SidebarHeader>
+      <SidebarContent className="px-2">
+        <SidebarGroup>
+          <SidebarGroupLabel className="items-center justify-between my-2">
+            <span>Leagues</span>
+            <Button
+              size="sm"
+              variant={"ghost"}
+              onClick={refresh}
+              disabled={isRefreshing}
+            >
+              <RefreshCw
+                className={cn("animate-none", isRefreshing && "animate-spin")}
+              />
+            </Button>
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <Select defaultValue={league_key} onValueChange={setLeagueKey}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {leagues.map((l) => (
+                      <SelectItem key={l.league_key} value={l.league_key}>
+                        {l.league_name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
 
-          <SidebarSeparator />
+        <SidebarSeparator />
 
-          <SidebarGroup>
-            <SidebarGroupLabel>Tools</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu suppressHydrationWarning>
-                {routes.map((r) => (
+        <SidebarGroup>
+          <SidebarGroupLabel>Tools</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu suppressHydrationWarning>
+              {league_key &&
+                routes.map((r) => (
                   <Link
                     key={r.route}
                     href={`/leagues/${league_key}/${r.route}`}
                   >
                     <SidebarMenuItem>
-                      <SidebarMenuButton disabled={!r.free && !tier}>
+                      <SidebarMenuButton
+                        onClick={() => {
+                          if (isMobile) toggleSidebar();
+                        }}
+                        disabled={!r.free && !tier}
+                      >
                         {!r.free && !tier && <Lock />}
                         {r.name}
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   </Link>
                 ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-        <SidebarFooter className="mb-8">
-          <SidebarGroup>
-            <SidebarGroupLabel className="text-lg">Settings</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <Link href="/account">
-                      {/* <item.icon /> */}
-                      <span>Account</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-          <SidebarGroup className="gap-3">
-            <Button variant="outline" onClick={logout}>
-              Sign Out
-            </Button>
-            <p className="text-muted-foreground text-xs">
-              Version: {pkg.version}
-            </p>
-          </SidebarGroup>
-        </SidebarFooter>
-      </Sidebar>
-    </>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+      <SidebarFooter className="mb-8">
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-lg">Settings</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/account">
+                    {/* <item.icon /> */}
+                    <span>Account</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup className="gap-3">
+          <Button variant="outline" onClick={logout}>
+            Sign Out
+          </Button>
+          <p className="text-muted-foreground text-xs">
+            Version: {pkg.version}
+          </p>
+        </SidebarGroup>
+      </SidebarFooter>
+    </Sidebar>
   );
 }

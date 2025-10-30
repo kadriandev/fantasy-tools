@@ -57,10 +57,13 @@ export default async function LeagueInfoPage({ params }: LeagueInfoPageProps) {
 
   return (
     <div className="container mx-auto">
-      <h1 className="text-4xl font-bold mb-8">{meta.name}</h1>
-      <Card className="mb-6">
+      <h1 className="text-xl ml-12 mt-2 md:text-4xl md:ml-0 md:mt-0 font-bold mb-8">
+        {meta.name}
+      </h1>
+      <Card className="m-2 mb-6">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">League Timeline</CardTitle>
+          <CardTitle className="text-md font-bold">League Timeline</CardTitle>
+
           <ArrowRight className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
@@ -69,9 +72,11 @@ export default async function LeagueInfoPage({ params }: LeagueInfoPageProps) {
       </Card>
 
       <div className="grid gap-6 md:grid-cols-2 mb-6">
-        <Card>
+        <Card className="m-2">
           <CardHeader>
-            <CardTitle>Current Standings</CardTitle>
+            <CardTitle className="text-md font-bold">
+              Current Standings
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
@@ -79,8 +84,10 @@ export default async function LeagueInfoPage({ params }: LeagueInfoPageProps) {
                 <TableRow>
                   <TableHead>Rank</TableHead>
                   <TableHead>Team</TableHead>
-                  <TableHead>W-L-T</TableHead>
-                  <TableHead>Games Behind</TableHead>
+                  <TableHead className="hidden md:block">W-L-T</TableHead>
+                  <TableHead className="hidden md:block">
+                    Games Behind
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -88,13 +95,15 @@ export default async function LeagueInfoPage({ params }: LeagueInfoPageProps) {
                   <TableRow key={team.team_id}>
                     <TableCell>{team.standings.rank}</TableCell>
                     <TableCell>{team.name}</TableCell>
-                    <TableCell>
+                    <TableCell className="hidden md:block">
                       {team.standings.outcome_totals.wins}-
                       {team.standings.outcome_totals.losses}-
                       {team.standings.outcome_totals.ties}
                     </TableCell>
 
-                    <TableCell>{team.standings.games_back}</TableCell>
+                    <TableCell className="hidden md:block">
+                      {team.standings.games_back}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -110,15 +119,20 @@ export default async function LeagueInfoPage({ params }: LeagueInfoPageProps) {
 
         <Card>
           <CardHeader>
-            <CardTitle>Upcoming Matchups</CardTitle>
+            <CardTitle className="text-md font-bold">
+              Upcoming Matchups
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="mt-6 space-y-4">
               {matchups.map((matchup: any, index: number) => (
-                <li key={index} className="flex justify-between items-center">
-                  <span className="truncate w-3/5">{matchup.home.name}</span>
+                <li
+                  key={index}
+                  className="flex flex-col p-2 text-center md:text-left md:flex-row md:justify-between md:items-center"
+                >
+                  <span className="truncate md:w-3/5">{matchup.home.name}</span>
                   <span className="text-muted-foreground">vs</span>
-                  <span className="text-right truncate w-3/5">
+                  <span className="md:text-right truncate md:w-3/5">
                     {matchup.away.name}
                   </span>
                 </li>

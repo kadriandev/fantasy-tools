@@ -9,6 +9,7 @@ export const database = new sst.aws.Postgres("Postgres", {
     database: "local",
     port: 5432,
   },
+  password: new sst.Secret("DBPassword").value,
 });
 
 export const redis = new sst.aws.Redis("Redis", {

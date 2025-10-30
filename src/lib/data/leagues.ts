@@ -10,6 +10,8 @@ import { redirect } from "next/navigation";
 
 export async function refreshLeagues() {
   const user = await auth();
+  if (!user) redirect("/");
+
   const user_leagues = await getUserLeaguesFromYahoo(user);
   if (!user_leagues || !user_leagues.length) return;
 
@@ -46,7 +48,6 @@ export async function refreshLeagues() {
       tx.rollback();
     }
   });
-
   // redirect("/leagues");
 }
 

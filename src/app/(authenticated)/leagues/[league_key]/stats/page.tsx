@@ -7,6 +7,7 @@ import { getUsersTeamId } from "@/lib/data/users";
 import { getLeagueCategories } from "@/lib/data/leagues";
 import { getLeagueStats } from "@/lib/data/stats";
 import { auth } from "@/lib/auth/actions";
+import { redirect } from "next/navigation";
 
 type PageProps = {
   params: Promise<{ league_key: string }>;
@@ -15,6 +16,7 @@ type PageProps = {
 export default async function StatsPage({ params }: PageProps) {
   const { league_key } = await params;
   const user = await auth();
+  if (!user) redirect("/");
 
   const [userTeamId, cats, stats, current_stats] = await Promise.all([
     getUsersTeamId(user, league_key),

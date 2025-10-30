@@ -30,9 +30,10 @@ interface LeagueInfoPageProps {
 
 export default async function LeagueInfoPage({ params }: LeagueInfoPageProps) {
   const { league_key } = await params;
-  const subject = await auth();
+  const user = await auth();
+  if (!user) redirect("/");
 
-  const yf = createYahooClient(subject.access);
+  const yf = createYahooClient(user.access);
   const [err, data] = await catchError(
     Promise.all<[{ name: string }, YahooLeagueSettings, YahooLeagueStandings]>([
       yf.league.meta(league_key),
@@ -49,7 +50,7 @@ export default async function LeagueInfoPage({ params }: LeagueInfoPageProps) {
   const [meta, settings, standings] = data;
 
   const matchups = await getUpcomingMatchups(
-    subject,
+    user,
     league_key,
     settings.current_week,
   );
@@ -63,8 +64,6 @@ export default async function LeagueInfoPage({ params }: LeagueInfoPageProps) {
       <Card className="m-2 mb-6">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-md font-bold">League Timeline</CardTitle>
-
-          <ArrowRight className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
           <Timeline events={events} />
@@ -84,8 +83,8 @@ export default async function LeagueInfoPage({ params }: LeagueInfoPageProps) {
                 <TableRow>
                   <TableHead>Rank</TableHead>
                   <TableHead>Team</TableHead>
-                  <TableHead className="hidden md:block">W-L-T</TableHead>
-                  <TableHead className="hidden md:block">
+                  <TableHead className="hidden md:table-cell">W-L-T</TableHead>
+                  <TableHead className="hidden md:table-cell">
                     Games Behind
                   </TableHead>
                 </TableRow>
@@ -95,13 +94,12 @@ export default async function LeagueInfoPage({ params }: LeagueInfoPageProps) {
                   <TableRow key={team.team_id}>
                     <TableCell>{team.standings.rank}</TableCell>
                     <TableCell>{team.name}</TableCell>
-                    <TableCell className="hidden md:block">
+                    <TableCell className="hidden md:table-cell">
                       {team.standings.outcome_totals.wins}-
                       {team.standings.outcome_totals.losses}-
                       {team.standings.outcome_totals.ties}
                     </TableCell>
-
-                    <TableCell className="hidden md:block">
+                    <TableCell className="hidden md:table-cell">
                       {team.standings.games_back}
                     </TableCell>
                   </TableRow>

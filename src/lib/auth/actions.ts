@@ -5,13 +5,13 @@ import { headers as getHeaders, cookies as getCookies } from "next/headers";
 import { subjects, UserSubject } from "../../../auth/subjects";
 import { client, setTokens } from "./auth";
 
-export async function auth(): Promise<UserSubject> {
+export async function auth(): Promise<UserSubject | false> {
   const cookies = await getCookies();
   const accessToken = cookies.get("access_token");
   const refreshToken = cookies.get("refresh_token");
 
   if (!accessToken) {
-    return redirect("/");
+    return false;
   }
 
   const verified = await client.verify(subjects, accessToken.value, {

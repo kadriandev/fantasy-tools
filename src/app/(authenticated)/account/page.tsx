@@ -11,11 +11,14 @@ import { createStripeCheckout } from "@/lib/stripe/create-checkout";
 import { getSubTier } from "@/lib/stripe/get-sub-tier";
 import { stripe } from "@/lib/stripe/stripe";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Resource } from "sst";
 
 export default async function AccountPage() {
-  const subject = await auth();
-  const sub = await getSubTier(subject.sub);
+  const user = await auth();
+  if (!user) redirect("/");
+
+  const sub = await getSubTier(user.sub);
 
   const { data: prices } = await stripe.prices.list({
     product: Resource.STRIPE_PRODUCT_ID.value,

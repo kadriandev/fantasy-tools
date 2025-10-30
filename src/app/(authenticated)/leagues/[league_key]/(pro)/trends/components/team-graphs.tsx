@@ -16,7 +16,7 @@ export default function TeamGraphs({ teams, data }: TeamOverviewProps) {
   const [selected, setSelected] = useState<string>("");
 
   return (
-    <>
+    <div>
       <div className="flex items-center">
         {/* <h1 className="text-xl align-middle ml-12 mt-1 mb-2 md:ml-0 md:py-4 flex font-bold"> */}
         <h1 className="ml-12 mt-1 flex text-xl font-bold md:ml-0">
@@ -44,6 +44,6 @@ export default function TeamGraphs({ teams, data }: TeamOverviewProps) {
           />
         ))}
       </div>
-    </>
+    </div>
   );
 }

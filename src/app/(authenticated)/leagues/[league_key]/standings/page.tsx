@@ -10,6 +10,7 @@ import { auth } from "@/lib/auth/actions";
 import { getUsersTeamId } from "@/lib/data/users";
 import { cn } from "@/lib/utils";
 import { createYahooClient } from "@/lib/yahoo";
+import { redirect } from "next/navigation";
 
 interface StandingsPageProps {
   params: Promise<{ league_key: string }>;
@@ -17,7 +18,10 @@ interface StandingsPageProps {
 
 export default async function StandingsPage({ params }: StandingsPageProps) {
   const { league_key } = await params;
+
   const user = await auth();
+  if (!user) redirect("/");
+
   const yf = createYahooClient(user.access);
 
   const [teamId, standings] = await Promise.all([
@@ -33,11 +37,11 @@ export default async function StandingsPage({ params }: StandingsPageProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-8">Rank</TableHead>
+            <TableHead className="w-6">Rank</TableHead>
             <TableHead>Team</TableHead>
-            <TableHead>W-L-T</TableHead>
-            <TableHead className="hidden md:block">Games Behind</TableHead>
-            <TableHead className="block md:hidden">GB</TableHead>
+            <TableHead className="w-20">W-L-T</TableHead>
+            <TableHead className="hidden md:table-cell">Games Behind</TableHead>
+            <TableHead className="table-cell md:hidden">GB</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -48,9 +52,9 @@ export default async function StandingsPage({ params }: StandingsPageProps) {
                 team.team_id == teamId && "bg-primary dark:bg-primary/40",
               )}
             >
-              <TableCell className="w-8">{team.standings.rank}</TableCell>
+              <TableCell className="w-6">{team.standings.rank}</TableCell>
               <TableCell>{team.name}</TableCell>
-              <TableCell>
+              <TableCell className="w-20">
                 {team.standings.outcome_totals.wins}-
                 {team.standings.outcome_totals.losses}-
                 {team.standings.outcome_totals.ties}

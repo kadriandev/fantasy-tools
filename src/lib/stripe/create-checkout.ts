@@ -14,6 +14,7 @@ export async function createStripeCheckout({
   returnUrl?: string;
 }) {
   const userInfo = await auth();
+  if (!userInfo) redirect("/");
 
   const existingSub = await getStripeSubByUserId(userInfo.sub);
   if (existingSub?.status === "active") {

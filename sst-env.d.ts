@@ -13,6 +13,14 @@ declare module "sst" {
       "type": "sst.sst.Secret"
       "value": string
     }
+    "FantasyToolsVpc": {
+      "bastion": string
+      "type": "sst.aws.Vpc"
+    }
+    "MigratorFn": {
+      "name": string
+      "type": "sst.aws.Function"
+    }
     "Postgres": {
       "database": string
       "host": string

@@ -1,34 +1,26 @@
-// import { ThemeSwitcher } from "@/components/theme-switcher";
-import { Button } from "@/components/ui/button";
-import { login } from "@/lib/auth/actions";
-import Image from "next/image";
+import { auth } from "@/lib/auth/actions";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
 export default async function Layout({ children }: { children: ReactNode }) {
+  const subject = await auth();
+
+  if (subject) {
+    redirect("/leagues");
+  }
+
   return (
     <>
-      <header className="w-full p-3">
-        <nav className="w-full flex items-center justify-between">
-          <span className="flex items-center gap-3">
-            <h1 className="text-xl font-bold align-middle">FantasyTools</h1>
-            <ul className="text-lg flex gap-3">
-              <li>Home</li>
-              <li>Pricing</li>
-            </ul>
-          </span>
-          <span className="flex gap-3 items-center">
-            {/* <ThemeSwitcher /> */}
-            <Button className="px-0 rounded-xl" variant="ghost" onClick={login}>
-              <Image
-                src={"/yahoo-sign-in-btn.png"}
-                alt="yahoo sign in button"
-                width={200}
-                height={100}
-                onClick={login}
-              />
-            </Button>
-          </span>
+      <header className="w-full p-5">
+        <nav className="w-full flex ">
+          <h1 className="text-3xl font-bold align-middle mx-auto ">
+            FantasyTools
+          </h1>
+          {/* <ul className="text-lg flex gap-3"> */}
+          {/*   <li>Home</li> */}
+          {/*   <li>Pricing</li> */}
+          {/* </ul> */}
         </nav>
       </header>
 

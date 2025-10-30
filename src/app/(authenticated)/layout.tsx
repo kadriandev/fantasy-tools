@@ -37,7 +37,7 @@ export default async function Layout({ children }: { children: ReactNode }) {
     <main>
       <SidebarProvider>
         <AppSidebar tier={tier} routes={routes} leagues={leagues} />
-        <SidebarTrigger className="fixed left-2 top-4 md:sticky md:top-4 ml-2">
+        <SidebarTrigger className="fixed z-20 left-2 top-4 md:sticky md:top-4 ml-2">
           <Menu />
         </SidebarTrigger>
         <div className="m-2 md:m-14 flex-1 w-full flex-col items-center">

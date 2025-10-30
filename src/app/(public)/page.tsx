@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import {
   Card,
   CardHeader,
@@ -6,8 +7,8 @@ import {
   CardContent,
   CardDescription,
 } from "@/components/ui/card";
+import { login } from "@/lib/auth/actions";
 import { TrendingUp, Award, Users } from "lucide-react";
-import Link from "next/link";
 
 export default function Page() {
   return (
@@ -16,7 +17,7 @@ export default function Page() {
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center space-y-4 text-center">
             <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
+              <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
                 Dominate Your Yahoo Fantasy Leagues
               </h1>
               <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
@@ -25,11 +26,19 @@ export default function Page() {
               </p>
             </div>
             <div className="space-x-4">
-              {/* <Link href="/pricing"> */}
-              <Button className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
-                See Pricing
+              <Button
+                className="px-0 rounded-xl"
+                variant="ghost"
+                onClick={login}
+              >
+                <Image
+                  src={"/yahoo-sign-in-btn.png"}
+                  alt="yahoo sign in button"
+                  width={200}
+                  height={100}
+                  onClick={login}
+                />
               </Button>
-              {/* </Link> */}
             </div>
           </div>
         </div>

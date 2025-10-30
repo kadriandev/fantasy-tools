@@ -5,6 +5,8 @@ import { ReactNode } from "react";
 
 export default async function Layout({ children }: { children: ReactNode }) {
   const user = await auth();
+  if (!user) redirect("/");
+
   const sub = await getSubTier(user.sub);
 
   if (sub === null) {

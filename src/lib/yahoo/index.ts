@@ -8,7 +8,6 @@ import {
 } from "./types";
 import { UserSubject } from "../../../auth/subjects";
 import { catchError } from "../utils";
-import { leagues } from "@/db/leagues.sql";
 
 export const createYahooClient = (token: string) => {
   const yf = new YahooFantasy(

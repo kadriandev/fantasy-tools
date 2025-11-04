@@ -6,11 +6,11 @@ export const userSchema = z.object({
   name: z.string(),
   given_name: z.string(),
   family_name: z.string(),
-  nickname: z.string(),
+  nickname: z.string().optional(),
   locale: z.string(),
   email: z.string().email(),
   email_verified: z.boolean(),
-  birthdate: z.string(),
+  birthdate: z.string().optional(),
   profile_images: z.object({
     image32: z.string().url(),
     image64: z.string().url(),

@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { users } from "@/db/users.sql";
 import { client, setTokens } from "@/lib/auth/auth";
+import { refreshLeagues } from "@/lib/data/leagues";
 import { InvalidAuthorizationCodeError } from "@openauthjs/openauth/error";
 import { eq, sql } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
@@ -39,6 +40,8 @@ export async function GET(req: NextRequest) {
       name: user.subject.properties.name,
       created_at: sql`NOW()`,
     });
+
+    await refreshLeagues();
   }
 
   // If successfully found or inserted, set tokens

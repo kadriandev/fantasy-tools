@@ -40,8 +40,6 @@ export async function GET(req: NextRequest) {
       name: user.subject.properties.name,
       created_at: sql`NOW()`,
     });
-
-    await refreshLeagues();
   }
 
   // If successfully found or inserted, set tokens

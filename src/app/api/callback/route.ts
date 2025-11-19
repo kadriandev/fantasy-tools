@@ -1,7 +1,6 @@
 import { db } from "@/db";
 import { users } from "@/db/users.sql";
 import { client, setTokens } from "@/lib/auth/auth";
-import { refreshLeagues } from "@/lib/data/leagues";
 import { InvalidAuthorizationCodeError } from "@openauthjs/openauth/error";
 import { eq, sql } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";

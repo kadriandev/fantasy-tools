@@ -8,6 +8,7 @@ import {
 } from "./types";
 import { UserSubject } from "../../../auth/subjects";
 import { catchError } from "../utils";
+import { YahooUserGames } from "./schemas";
 
 export const createYahooClient = (token: string) => {
   const yf = new YahooFantasy(
@@ -53,9 +54,11 @@ export async function getUserLeaguesFromYahoo(user: UserSubject) {
   const all_leagues = [];
   const yf = createYahooClient(user.access);
 
-  const games = await yf.user.games();
-  if (games.error) {
-    console.error("Error fetching from yahoo fantasy api.");
+  const [err, games] = await catchError<YahooUserGames>(yf.user.games());
+  if (err) {
+    console.error(
+      "[func: getUserLeaguesFromYahoo] Error fetching from yahoo fantasy api.",
+    );
     return [];
   }
 

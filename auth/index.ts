@@ -34,7 +34,10 @@ const app = issuer({
   success: async (ctx, value) => {
     if (value.provider === "yahoo") {
       const user = await getUser(value.tokenset.access);
-      if (user) return ctx.subject("user", user);
+      if (user) {
+        console.log(`[SUCCESSFUL LOGIN]: ${user.name} logged in.`);
+        return ctx.subject("user", user);
+      }
 
       throw new Error("Unable to find user.");
     }

@@ -4,10 +4,10 @@ import { createSubjects } from "@openauthjs/openauth/subject";
 export const userSchema = z.object({
   sub: z.string(),
   name: z.string(),
-  given_name: z.string(),
-  family_name: z.string(),
+  given_name: z.string().optional(),
+  family_name: z.string().optional(),
   nickname: z.string().optional(),
-  locale: z.string(),
+  locale: z.string().optional(),
   email: z.string().email(),
   email_verified: z.boolean(),
   birthdate: z.string().optional(),

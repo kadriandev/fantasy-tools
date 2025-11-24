@@ -30,7 +30,7 @@ export default async function StatsPage({ params }: PageProps) {
   );
 
   return (
-    <div className="mx-auto max-w-[90vw]">
+    <div className="mx-auto max-w-[85vw]">
       <StatsTable
         userTeamId={userTeamId}
         columns={columns}

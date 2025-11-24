@@ -20,10 +20,11 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
     <div className="relative max-w-5/6 mx-auto px-4 py-8 overflow-x-auto scrollbar-hide">
       <div
         id="timeline-container"
-        className="w-[600px] overflow-x-auto pb-4 scrollbar-hide"
+        className="w-[600px] overflow-x-auto pb-4 scrollbar-hide mx-auto"
       >
-        <div className="flex items-center justify-between px-4">
-          <div className="mx-16 w-[500px] absolute left-0 right-0 top-[66px] h-0.5 bg-muted-foreground z-0 " />
+        <div className="relative flex items-center justify-between px-4">
+          {/* <div className="mx-16 w-[500px] absolute left-0 right-0 top-[66px] h-0.5 bg-muted-foreground z-0 " /> */}
+          <div className="mx-16 w-[500px] absolute left-[-18px] top-[35px] h-0.5 bg-muted-foreground z-0 " />
           {sortedEvents.map((event, index) => (
             <div
               key={index}

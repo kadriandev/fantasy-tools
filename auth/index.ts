@@ -28,7 +28,7 @@ const app = issuer({
     yahoo: YahooProvider({
       clientID: Resource.YAHOO_CLIENT_ID.value,
       clientSecret: Resource.YAHOO_CLIENT_SECRET.value,
-      scopes: ["openid2", "email", "profile"],
+      scopes: ["openid2", "email", "profile", "fspt-r"],
     }),
   },
   success: async (ctx, value) => {

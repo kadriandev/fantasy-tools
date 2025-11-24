@@ -97,9 +97,11 @@ export default async function AccountPage() {
                   </CardContent>
                   <CardFooter>
                     {sub?.priceId !== p.id ? (
-                      <form action={createCheckout}>
+                      <form className="mx-auto" action={createCheckout}>
                         <input type="hidden" name="priceId" value={p.id} />
-                        <Button type="submit">Select Plan</Button>
+                        <Button type="submit" variant={"outline"}>
+                          Select Plan
+                        </Button>
                       </form>
                     ) : (
                       <Link href={Resource.STRIPE_PORTAL_URL.value}>

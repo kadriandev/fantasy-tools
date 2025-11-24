@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import {
@@ -8,9 +10,17 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { login } from "@/lib/auth/actions";
-import { TrendingUp, Award, Users } from "lucide-react";
+import { TrendingUp, Award, Users, LoaderCircle } from "lucide-react";
+import { useState } from "react";
 
 export default function Page() {
+  const [loading, setLoading] = useState(false);
+
+  const onClick = () => {
+    setLoading(true);
+    login();
+  };
+
   return (
     <>
       <section className="w-full flex justify-center py-12 md:py-24 lg:py-32 xl:py-48">
@@ -26,19 +36,20 @@ export default function Page() {
               </p>
             </div>
             <div className="space-x-4">
-              <Button
-                className="px-0 rounded-xl"
-                variant="ghost"
-                onClick={login}
-              >
-                <Image
-                  src={"/yahoo-sign-in-btn.png"}
-                  alt="yahoo sign in button"
-                  width={200}
-                  height={100}
-                  onClick={login}
-                />
-              </Button>
+              {!loading ? (
+                <Button className="px-0 rounded-3xl" onClick={onClick}>
+                  <Image
+                    src={"/yahoo-sign-in-btn.png"}
+                    alt="yahoo sign in button"
+                    width={250}
+                    height={100}
+                  />
+                </Button>
+              ) : (
+                <Button className="w-[250px] rounded-3xl" disabled>
+                  <LoaderCircle className="animate-spin text-white" />
+                </Button>
+              )}
             </div>
           </div>
         </div>

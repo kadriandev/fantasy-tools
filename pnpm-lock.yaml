@@ -16,7 +16,7 @@ importers:
         version: 0.1.2
       '@openauthjs/openauth':
         specifier: ^0.3.6
-        version: 0.3.6(arctic@2.3.4)(hono@4.6.18)
+        version: 0.3.6(arctic@2.3.4)(hono@4.10.3)
       '@radix-ui/react-dialog':
         specifier: ^1.1.5
         version: 1.1.5(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -69,8 +69,8 @@ importers:
         specifier: ^0.39.0
         version: 0.39.0(@opentelemetry/api@1.9.0)(@types/pg@8.11.11)(@types/react@19.0.8)(pg@8.13.1)(react@19.0.0)
       hono:
-        specifier: ^4.6.18
-        version: 4.6.18
+        specifier: ^4.10.3
+        version: 4.10.3
       ioredis:
         specifier: ^5.4.2
         version: 5.4.2
@@ -2686,8 +2686,8 @@ packages:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
 
-  hono@4.6.18:
-    resolution: {integrity: sha512-Fu7hEPvdwtPG8LqSAiPn8p8HjD+PDxrP/HVnwRBnwtVKOn5zDDKsw0ma2Xt58oq97Rlp3t/mRNADEV/Ym6cDng==}
+  hono@4.10.3:
+    resolution: {integrity: sha512-2LOYWUbnhdxdL8MNbNg9XZig6k+cZXm5IjHn2Aviv7honhBMOHb+jxrKIeJRZJRmn+htUCKhaicxwXuUDlchRA==}
     engines: {node: '>=16.9.0'}
 
   humanize-ms@1.2.1:
@@ -3005,6 +3005,7 @@ packages:
   node-domexception@1.0.0:
     resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
     engines: {node: '>=10.5.0'}
+    deprecated: Use your platform's native DOMException instead
 
   node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
@@ -4424,12 +4425,12 @@ snapshots:
 
   '@nolyfill/is-core-module@1.0.39': {}
 
-  '@openauthjs/openauth@0.3.6(arctic@2.3.4)(hono@4.6.18)':
+  '@openauthjs/openauth@0.3.6(arctic@2.3.4)(hono@4.10.3)':
     dependencies:
       '@standard-schema/spec': 1.0.0-beta.3
       arctic: 2.3.4
       aws4fetch: 1.0.20
-      hono: 4.6.18
+      hono: 4.10.3
       jose: 5.9.6
 
   '@opentelemetry/api@1.9.0':
@@ -6141,7 +6142,7 @@ snapshots:
     dependencies:
       function-bind: 1.1.2
 
-  hono@4.6.18: {}
+  hono@4.10.3: {}
 
   humanize-ms@1.2.1:
     dependencies:

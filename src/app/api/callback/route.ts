@@ -21,28 +21,29 @@ export async function GET(req: NextRequest) {
   }
 
   // Check if user exists
-  const user = await client.verify(subjects, exchanged.tokens.access);
-  if (user.err) {
+  let verified = await client.verify(subjects, exchanged.tokens.access);
+  if (verified.err) {
     return NextResponse.json(exchanged.err, { status: 400 });
   }
 
   const res = await db
     .select()
     .from(users)
-    .where(eq(users.user_id, user.subject.properties.sub));
+    .where(eq(users.user_id, verified.subject.properties.sub));
 
   // Insert user into table if not existing
   if (!res.length) {
     await db.insert(users).values({
-      user_id: user.subject.properties.sub,
-      email: user.subject.properties.email,
-      name: user.subject.properties.name,
+      user_id: verified.subject.properties.sub,
+      email: verified.subject.properties.email,
+      name: verified.subject.properties.name,
       created_at: sql`NOW()`,
     });
   }
 
   // If successfully found or inserted, set tokens
-  await setTokens(exchanged.tokens);
+  verified.tokens = exchanged.tokens;
+  await setTokens(verified);
 
   return NextResponse.redirect(`${host}/leagues`);
 }

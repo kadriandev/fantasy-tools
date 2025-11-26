@@ -1,17 +1,21 @@
 import { Resource } from "sst";
-import { createClient } from "@openauthjs/openauth/client";
+import { createClient, VerifyResult } from "@openauthjs/openauth/client";
 import { cookies as getCookies } from "next/headers";
+import { subjects } from "../../../auth/subjects";
 
 export const client = createClient({
   clientID: "fantasy-tools",
   issuer: Resource.Auth.url,
 });
 
-export async function setTokens(tokens: { access: string; refresh: string }) {
+export async function setTokens(verified: VerifyResult<typeof subjects>) {
   const cookies = await getCookies();
+
+  if (!verified.tokens) return;
+
   cookies.set({
     name: "access_token",
-    value: tokens.access,
+    value: verified.tokens.access,
     httpOnly: true,
     sameSite: "lax",
     path: "/",
@@ -19,10 +23,21 @@ export async function setTokens(tokens: { access: string; refresh: string }) {
   });
   cookies.set({
     name: "refresh_token",
-    value: tokens.refresh,
+    value: verified.tokens.refresh,
     httpOnly: true,
     sameSite: "lax",
     path: "/",
     maxAge: 34560000,
   });
+
+  if (verified.subject?.properties.access) {
+    cookies.set({
+      name: "yahoo_access_token",
+      value: verified.subject.properties.access,
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 3600,
+    });
+  }
 }

@@ -17,6 +17,7 @@ import { auth } from "@/lib/auth/actions";
 import { YahooLeagueSettings, YahooLeagueStandings } from "@/lib/yahoo/types";
 import { catchError } from "@/lib/utils";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Fantasy League Information",
@@ -29,10 +30,10 @@ interface LeagueInfoPageProps {
 
 export default async function LeagueInfoPage({ params }: LeagueInfoPageProps) {
   const { league_key } = await params;
-  const user = await auth();
-  if (!user) redirect("/");
+  const cookieStore = await cookies();
+  const access = cookieStore.get("yahoo_access_token");
 
-  const yf = createYahooClient(user.access);
+  const yf = createYahooClient(access?.value!);
   const [err, data] = await catchError(
     Promise.all<[{ name: string }, YahooLeagueSettings, YahooLeagueStandings]>([
       yf.league.meta(league_key),

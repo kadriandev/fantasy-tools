@@ -21,9 +21,7 @@ export async function auth(): Promise<UserSubject | false> {
   if (verified.err) {
     return redirect("/");
   }
-  if (verified.tokens) {
-    await setTokens(verified.tokens);
-  }
+  await setTokens(verified);
 
   return verified.subject.properties as UserSubject;
 }
@@ -38,7 +36,7 @@ export async function login() {
       refresh: refreshToken?.value,
     });
     if (!verified.err && verified.tokens) {
-      await setTokens(verified.tokens);
+      await setTokens(verified);
       redirect("/leagues");
     }
   }

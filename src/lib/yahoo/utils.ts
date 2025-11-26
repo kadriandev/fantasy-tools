@@ -1,12 +1,8 @@
 import { createYahooClient } from ".";
 import { DBFantasyStats, YahooLeagueScoreboard } from "./types";
-import { auth } from "../auth/actions";
-import { redirect } from "next/navigation";
 
 export const getMatchupTeamId = async (league_key: string, team_id: string) => {
-  const user = await auth();
-  if (!user) redirect("/");
-  const yf = createYahooClient(user.access);
+  const yf = await createYahooClient();
 
   const scoreboard = (await yf.league.scoreboard(
     league_key,

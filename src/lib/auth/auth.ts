@@ -30,10 +30,19 @@ export async function setTokens(verified: VerifyResult<typeof subjects>) {
     maxAge: 34560000,
   });
 
-  if (verified.subject?.properties.access) {
+  if (verified.subject?.properties) {
     cookies.set({
       name: "yahoo_access_token",
       value: verified.subject.properties.access,
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 3600,
+    });
+
+    cookies.set({
+      name: "user_sub",
+      value: verified.subject.properties.sub,
       httpOnly: true,
       sameSite: "lax",
       path: "/",

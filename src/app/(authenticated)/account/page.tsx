@@ -6,19 +6,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { auth } from "@/lib/auth/actions";
 import { createStripeCheckout } from "@/lib/stripe/create-checkout";
 import { getSubTier } from "@/lib/stripe/get-sub-tier";
 import { stripe } from "@/lib/stripe/stripe";
+import { cookies } from "next/headers";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { Resource } from "sst";
 
 export default async function AccountPage() {
-  const user = await auth();
-  if (!user) redirect("/");
+  const cookieStore = await cookies();
+  const usersub = cookieStore.get("user_sub")!;
 
-  const sub = await getSubTier(user.sub);
+  const sub = await getSubTier(usersub.value);
 
   const { data: prices } = await stripe.prices.list({
     product: Resource.STRIPE_PRODUCT_ID.value,

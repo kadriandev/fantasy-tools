@@ -6,11 +6,9 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { auth } from "@/lib/auth/actions";
 import { getUsersTeamId } from "@/lib/data/users";
 import { cn } from "@/lib/utils";
 import { createYahooClient } from "@/lib/yahoo";
-import { redirect } from "next/navigation";
 
 interface StandingsPageProps {
   params: Promise<{ league_key: string }>;
@@ -19,13 +17,10 @@ interface StandingsPageProps {
 export default async function StandingsPage({ params }: StandingsPageProps) {
   const { league_key } = await params;
 
-  const user = await auth();
-  if (!user) redirect("/");
-
-  const yf = createYahooClient(user.access);
+  const yf = await createYahooClient();
 
   const [teamId, standings] = await Promise.all([
-    getUsersTeamId(user, league_key),
+    getUsersTeamId(league_key),
     yf.league.standings(league_key),
   ]);
 

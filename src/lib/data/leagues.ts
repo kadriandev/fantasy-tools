@@ -12,7 +12,7 @@ export async function refreshLeagues() {
   const user = await auth();
   if (!user) redirect("/");
 
-  const user_leagues = await getUserLeaguesFromYahoo(user);
+  const user_leagues = await getUserLeaguesFromYahoo();
   if (!user_leagues || !user_leagues.length) return;
 
   await db.transaction(async (tx) => {

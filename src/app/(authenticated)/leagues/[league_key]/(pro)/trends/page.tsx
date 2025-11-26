@@ -5,8 +5,6 @@ import { getLeagueCategories } from "@/lib/data/leagues";
 import { getLeagueStats } from "@/lib/data/stats";
 import { DBFantasyStats } from "@/lib/yahoo/types";
 import { processStatChartData } from "./components/utils";
-import { auth } from "@/lib/auth/actions";
-import { redirect } from "next/navigation";
 
 interface TrendsPageProps {
   params: Promise<{ league_key: string }>;
@@ -20,13 +18,10 @@ export default async function TrendsPage({
   const { league_key } = await params;
   const { compareTo } = await searchParams;
 
-  const user = await auth();
-  if (!user) redirect("/");
-
   const [team_id, cats, stats] = await Promise.all([
-    getUsersTeamId(user, league_key),
+    getUsersTeamId(league_key),
     getLeagueCategories(league_key),
-    getLeagueStats(user, league_key),
+    getLeagueStats(league_key),
   ]);
 
   if (!stats.length) {

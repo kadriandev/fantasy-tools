@@ -4,7 +4,6 @@ import { db } from "@/db";
 import { stats } from "@/db/leagues.sql";
 import { eq, desc } from "drizzle-orm";
 import { createYahooClient, getLeagueStatsFromYahoo } from "../yahoo";
-import { UserSubject } from "../../../auth/subjects";
 
 export async function getLastSavedWeek(league_key: string) {
   return db
@@ -15,8 +14,8 @@ export async function getLastSavedWeek(league_key: string) {
     .limit(1);
 }
 
-export async function getLeagueStats(user: UserSubject, league_key: string) {
-  const yf = createYahooClient(user.access);
+export async function getLeagueStats(league_key: string) {
+  const yf = await createYahooClient();
 
   const [settings, data] = await Promise.all([
     yf.league.settings(league_key),
@@ -27,7 +26,6 @@ export async function getLeagueStats(user: UserSubject, league_key: string) {
   const unsavedWeeks = settings.current_week - (data[0]?.week ?? 0) - 1;
   if (data === null || unsavedWeeks) {
     const league_stats = await getLeagueStatsFromYahoo(
-      user,
       league_key,
       data[0]?.week ?? 0,
       unsavedWeeks,

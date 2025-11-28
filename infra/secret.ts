@@ -8,6 +8,7 @@ export const secrets = {
   STRIPE_PUBLISHABLE_KEY: new sst.Secret("STRIPE_PUBLISHABLE_KEY"),
   STRIPE_SECRET_KEY: new sst.Secret("STRIPE_SECRET_KEY"),
   STRIPE_WEBHOOK_SECRET: new sst.Secret("STRIPE_WEBHOOK_SECRET"),
+  SENTRY_AUTH_TOKEN: new sst.Secret("SENTRY_AUTH_TOKEN"),
 };
 
 export const allSecrets = Object.values(secrets);

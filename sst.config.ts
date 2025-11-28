@@ -1,5 +1,4 @@
 /// <reference path="./.sst/platform/config.d.ts" />
-import { readdirSync } from "fs";
 export default $config({
   app(input) {
     return {
@@ -7,10 +6,11 @@ export default $config({
       removal: input?.stage === "production" ? "retain" : "remove",
       protect: ["production"].includes(input?.stage),
       home: "aws",
-      providers: { cloudflare: "5.49.0" },
+      providers: { cloudflare: "6.10.0" },
     };
   },
   async run() {
+    const { readdirSync } = await import("fs");
     const outputs = {};
     for (const value of readdirSync("./infra/")) {
       const result = await import("./infra/" + value);

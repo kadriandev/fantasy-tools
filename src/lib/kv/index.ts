@@ -3,17 +3,20 @@ import Redis, { Cluster } from "ioredis";
 
 const kv =
   Resource.App.stage === "production"
-    ? new Cluster([{ host: Resource.Redis.host, port: Resource.Redis.port }], {
-        slotsRefreshTimeout: 20000,
-        redisOptions: {
-          tls: { checkServerIdentity: () => undefined },
-          username: Resource.Redis.username,
-          password: Resource.Redis.password,
+    ? new Cluster(
+        [{ host: Resource.RedisV2.host, port: Resource.RedisV2.port }],
+        {
+          slotsRefreshTimeout: 20000,
+          redisOptions: {
+            tls: { checkServerIdentity: () => undefined },
+            username: Resource.RedisV2.username,
+            password: Resource.RedisV2.password,
+          },
         },
-      })
+      )
     : new Redis({
-        host: Resource.Redis.host,
-        port: Resource.Redis.port,
+        host: Resource.RedisV2.host,
+        port: Resource.RedisV2.port,
       });
 
 kv.on("error", (error) => {

@@ -1,6 +1,14 @@
 import { vpc } from "./vpc";
 import { isPermanentStage } from "./stage";
 
+export const redis = new sst.aws.Redis("RedisV2", {
+  vpc,
+  dev: {
+    host: "localhost",
+    port: 6379,
+  },
+});
+
 export const database = new sst.aws.Postgres("Postgres", {
   vpc,
   dev: {
@@ -10,14 +18,6 @@ export const database = new sst.aws.Postgres("Postgres", {
     port: 5432,
   },
   password: new sst.Secret("DBPassword").value,
-});
-
-export const redis = new sst.aws.Redis("Redis", {
-  vpc,
-  dev: {
-    host: "localhost",
-    port: 6379,
-  },
 });
 
 if (isPermanentStage) {

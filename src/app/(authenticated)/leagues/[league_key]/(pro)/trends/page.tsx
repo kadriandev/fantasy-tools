@@ -3,7 +3,6 @@ import TeamGraphs from "./components/team-graphs";
 import { groupStatsByWeek } from "@/lib/yahoo/utils";
 import { getLeagueCategories } from "@/lib/data/leagues";
 import { getLeagueStats } from "@/lib/data/stats";
-import { DBFantasyStats } from "@/lib/yahoo/schemas";
 import { processStatChartData } from "./components/utils";
 
 interface TrendsPageProps {
@@ -36,7 +35,7 @@ export default async function TrendsPage({
     );
   }
 
-  const teams = groupStatsByWeek(stats as unknown as DBFantasyStats[])[0]
+  const teams = groupStatsByWeek(stats)[0]
     .filter((t) => +t.team_id !== team_id)
     .map((t) => t.team_name);
 

@@ -1,4 +1,4 @@
-import { YahooSettingsStatCategory } from "@/lib/yahoo/schemas";
+import { YahooSettingsStatCategory } from "@/lib/yahoo/league/schemas";
 import { groupStatsByWeek } from "@/lib/yahoo/utils";
 
 export const processStatChartData = (

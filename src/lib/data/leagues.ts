@@ -4,9 +4,9 @@ import { db } from "@/db";
 import { leagues, user_to_league } from "@/db/leagues.sql";
 import { eq, sql, and, gte } from "drizzle-orm";
 import { users } from "@/db/users.sql";
-import { getUserLeaguesFromYahoo } from "../yahoo";
 import { auth } from "../auth/actions";
 import { redirect } from "next/navigation";
+import { getUserLeaguesFromYahoo } from "../yahoo/utils";
 
 export async function refreshLeagues() {
   const user = await auth();

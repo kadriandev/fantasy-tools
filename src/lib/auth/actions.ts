@@ -60,3 +60,16 @@ export async function logout() {
 
   redirect("/");
 }
+
+export async function getUserId() {
+  const cookies = await getCookies();
+  const sub = cookies.get("user_sub")!;
+
+  if (!sub) {
+    const subject = await auth();
+    if (!subject) redirect("/");
+    return subject.sub;
+  }
+
+  return sub.value;
+}

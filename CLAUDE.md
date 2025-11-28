@@ -47,7 +47,7 @@ Three main entities:
 
 #### Yahoo Fantasy Integration
 - Client wrapper in `src/lib/yahoo/index.ts` using `yahoo-fantasy` package
-- Comprehensive TypeScript types in `src/lib/yahoo/schemas.ts` and `src/lib/yahoo/types.ts`
+- Comprehensive Zod schemas with TypeScript types in `src/lib/yahoo/schemas.ts`
 - Key functions:
   - `getUserLeaguesFromYahoo()` - Fetch user's active leagues
   - `getCurrentWeekStats()` - Get current week fantasy stats

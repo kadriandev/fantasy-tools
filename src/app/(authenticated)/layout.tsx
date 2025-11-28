@@ -23,7 +23,7 @@ export default async function Layout({ children }: { children: ReactNode }) {
   }
 
   const [err, data] = await catchError(
-    Promise.all([getSubTier(subject.sub), getLeagues(subject.sub)]),
+    Promise.all([getSubTier(), getLeagues(subject.sub)]),
   );
 
   if (err) {

@@ -1,13 +1,9 @@
-import { auth } from "@/lib/auth/actions";
 import { getSubTier } from "@/lib/stripe/get-sub-tier";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
 export default async function Layout({ children }: { children: ReactNode }) {
-  const user = await auth();
-  if (!user) redirect("/");
-
-  const sub = await getSubTier(user.sub);
+  const sub = await getSubTier();
 
   if (sub === null) {
     redirect("/not-allowed");

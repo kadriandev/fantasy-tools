@@ -10,14 +10,14 @@ import {
 } from "@/components/ui/select";
 import DataTable from "./data-table";
 import { useEffect, useState } from "react";
-import { DBFantasyStats, FantasyStats } from "@/lib/yahoo/types";
+import { DBFantasyStats, FantasyStats } from "@/lib/yahoo/schemas";
 import { ColumnDef } from "@tanstack/react-table";
 
 interface StatsTableProps {
   userTeamId: number;
   columns: Array<ColumnDef<FantasyStats>>;
   current_stats: Array<FantasyStats>;
-  stats: Array<Array<DBFantasyStats>>;
+  stats: Array<DBFantasyStats>;
 }
 
 export default function StatsTable({

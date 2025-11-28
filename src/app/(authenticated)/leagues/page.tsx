@@ -1,17 +1,10 @@
+import { getUserId } from "@/lib/auth/actions";
 import { refreshLeagues } from "@/lib/data/leagues";
 import { getUser } from "@/lib/data/users";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export default async function LeagueInfoPage() {
-  const cookieStore = await cookies();
-  const sub = cookieStore.get("user_sub");
-
-  if (!sub) {
-    redirect("/");
-  }
-
-  const user = await getUser(sub.value);
+  const userId = await getUserId();
+  const user = await getUser(userId);
   if (user.length && !user[0].last_updated) await refreshLeagues();
 
   return (

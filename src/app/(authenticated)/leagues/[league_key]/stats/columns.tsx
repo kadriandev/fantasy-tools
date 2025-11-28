@@ -1,4 +1,4 @@
-import { FantasyStats, YahooSettingsStatCategory } from "@/lib/yahoo/types";
+import { FantasyStats, YahooSettingsStatCategory } from "@/lib/yahoo/schemas";
 import { ColumnDef } from "@tanstack/react-table";
 
 export const createStatTableColumns = (

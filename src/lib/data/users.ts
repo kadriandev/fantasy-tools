@@ -4,11 +4,10 @@ import { user_to_league } from "@/db/leagues.sql";
 import { db } from "@/db";
 import { eq, and } from "drizzle-orm";
 import { users } from "@/db/users.sql";
-import { cookies } from "next/headers";
+import { getUserId } from "../auth/actions";
 
 export const getUsersTeamId = async (league_key: string) => {
-  const cookieStore = await cookies();
-  const sub = cookieStore.get("user_sub")!;
+  const sub = await getUserId();
 
   return db
     .select({ team_id: user_to_league.team_id })
@@ -16,7 +15,7 @@ export const getUsersTeamId = async (league_key: string) => {
     .where(
       and(
         eq(user_to_league.league_key, league_key),
-        eq(user_to_league.user_id, sub.value),
+        eq(user_to_league.user_id, sub),
       ),
     )
     .then((res) => res[0].team_id);

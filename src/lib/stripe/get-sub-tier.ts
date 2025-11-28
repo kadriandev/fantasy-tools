@@ -1,8 +1,24 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { getStripeSubByUserId } from "./store";
+import { auth } from "../auth/actions";
+import { redirect } from "next/navigation";
 
-export async function getSubTier(userId: string) {
+export async function getSubTier() {
+  const cookieStore = await cookies();
+  const usersub = cookieStore.get("user_sub");
+  let userId;
+
+  if (usersub) {
+    userId = usersub.value;
+  } else {
+    const user = await auth();
+    if (!user) redirect("/");
+
+    userId = user.sub;
+  }
+
   const sub = await getStripeSubByUserId(userId);
   if (sub?.status === "active") return sub;
 

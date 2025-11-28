@@ -17,10 +17,6 @@ export default async function Layout({ children }: { children: ReactNode }) {
           <h1 className="text-3xl font-bold align-middle mx-auto ">
             FantasyTools
           </h1>
-          {/* <ul className="text-lg flex gap-3"> */}
-          {/*   <li>Home</li> */}
-          {/*   <li>Pricing</li> */}
-          {/* </ul> */}
         </nav>
       </header>
 

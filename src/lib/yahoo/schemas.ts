@@ -1,373 +1,186 @@
-export type YahooLeagueScoreboard = {
-  league_key: string;
-  league_id: string;
-  name: string;
-  url: string;
-  logo_url: string;
-  draft_status: string;
-  num_teams: number;
-  edit_key: string;
-  weekly_deadline: string;
-  league_update_timestamp: string;
-  scoring_type: string;
-  league_type: string;
-  renew: string;
-  renewed: string;
-  felo_tier: string;
-  iris_group_chat_id: string;
-  allow_add_to_dl_extra_pos: number;
-  is_pro_league: string;
-  is_cash_league: string;
-  current_week: number;
-  start_week: string;
-  start_date: string;
-  end_week: string;
-  end_date: string;
-  is_plus_league: string;
-  game_code: string;
-  season: string;
-  scoreboard: {
-    week: string;
-    matchups: Array<{
-      week: string;
-      week_start: string;
-      week_end: string;
-      status: string;
-      is_playoffs: string;
-      is_consolation: string;
-      stat_winners: Array<{ stat_id: string; winner_team_key: string }>;
-      teams: Array<{
-        team_key: string;
-        team_id: string;
-        name: string;
-        url: string;
-        team_logos: Array<any>;
-        waiver_priority: number;
-        number_of_moves: number;
-        number_of_trades: number;
-        roster_adds: [object];
-        league_scoring_type: string;
-        has_draft_grade: number;
-        auction_budget_total: string;
-        auction_budget_spent: number;
-        managers: Array<any>;
-        points: { coverage_type: string; week: string; total: string };
-        stats: Array<{ stat_id: string; value: string }>;
-      }>;
-    }>;
-  };
-};
-export type YahooLeagueSettings = {
-  league_key: string;
-  league_id: string;
-  name: string;
-  url: string;
-  logo_url: string;
-  draft_status: string;
-  num_teams: number;
-  edit_key: string;
-  weekly_deadline: string;
-  league_update_timestamp: string;
-  scoring_type: string;
-  league_type: string;
-  renew: string;
-  renewed: string;
-  felo_tier: string;
-  iris_group_chat_id: string;
-  allow_add_to_dl_extra_pos: number;
-  is_pro_league: string;
-  is_cash_league: string;
-  current_week: number;
-  start_week: string;
-  start_date: string;
-  end_week: string;
-  end_date: string;
-  is_plus_league: string;
-  game_code: string;
-  season: string;
-  settings: {
-    draft_type: string;
-    is_auction_draft: string;
-    scoring_type: string;
-    uses_playoff: string;
-    has_playoff_consolation_games: boolean;
-    playoff_start_week: string;
-    uses_playoff_reseeding: number;
-    uses_lock_eliminated_teams: number;
-    num_playoff_teams: string;
-    num_playoff_consolation_teams: number;
-    has_multiweek_championship: number;
-    waiver_type: string;
-    waiver_rule: string;
-    uses_faab: string;
-    draft_time: string;
-    draft_pick_time: string;
-    post_draft_players: string;
-    max_teams: string;
-    waiver_time: string;
-    trade_end_date: string;
-    trade_ratify_type: string;
-    trade_reject_time: string;
-    player_pool: string;
-    cant_cut_list: string;
-    draft_together: number;
-    sendbird_channel_url: string;
-    roster_positions: Array<{
-      position: string;
-      position_type: string;
-      count: number;
-      is_starting_position: number;
-    }>;
-    stat_categories: Array<YahooSettingsStatCategory>;
-    max_weekly_adds: string;
-    uses_median_score: boolean;
-    league_premium_features: [];
-  };
-};
+import { z } from "zod";
 
-export type YahooUserGameLeagues = {
-  guid: string;
-  games: [
-    {
-      game_key: string;
-      game_id: string;
-      name: string;
-      code: string;
-      type: string;
-      url: string;
-      season: string;
-      leagues: YahooGameLeague[];
-    },
-  ];
-};
+// Yahoo Game League Schema
+export const yahooGameLeagueSchema = z.object({
+  league_key: z.string(),
+  league_id: z.string(),
+  name: z.string(),
+  url: z.string(),
+  draft_status: z.string(),
+  num_teams: z.number(),
+  edit_key: z.string(),
+  weekly_deadline: z.string(),
+  league_update_timestamp: z.string(),
+  scoring_type: z.string(),
+  league_type: z.string(),
+  renew: z.string(),
+  renewed: z.string(),
+  short_invitation_url: z.string(),
+  is_pro_league: z.string(),
+  start_date: z.string(),
+  end_date: z.string(),
+  is_finished: z.number(),
+});
+export type YahooGameLeague = z.infer<typeof yahooGameLeagueSchema>;
 
-export type YahooGameLeague = {
-  league_key: string;
-  league_id: string;
-  name: string;
-  url: string;
-  draft_status: string;
-  num_teams: number;
-  edit_key: string;
-  weekly_deadline: string;
-  league_update_timestamp: string;
-  scoring_type: string;
-  league_type: string;
-  renew: string;
-  renewed: string;
-  short_invitation_url: string;
-  is_pro_league: string;
-  start_date: string;
-  end_date: string;
-  is_finished: number;
-};
+// Yahoo User Game Leagues Schema
+export const yahooUserGameLeaguesSchema = z.object({
+  guid: z.string(),
+  games: z.tuple([
+    z.object({
+      game_key: z.string(),
+      game_id: z.string(),
+      name: z.string(),
+      code: z.string(),
+      type: z.string(),
+      url: z.string(),
+      season: z.string(),
+      leagues: z.array(yahooGameLeagueSchema),
+    }),
+  ]),
+});
 
-export type LeagueMeta = {
-  league_key: string;
-  league_id: string;
-  name: string;
-  url: string;
-  logo_url: string;
-  draft_status: string;
-  num_teams: number;
-  edit_key: string;
-  weekly_deadline: string;
-  league_update_timestamp: null;
-  scoring_type: string;
-  league_type: string;
-  renew: string;
-  renewed: string;
-  felo_tier: string;
-  iris_group_chat_id: string;
-  allow_add_to_dl_extra_pos: number;
-  is_pro_league: string;
-  is_cash_league: string;
-  current_week: number;
-  start_week: string;
-  start_date: string;
-  end_week: string;
-  end_date: string;
-  is_plus_league: string;
-  game_code: string;
-  season: string;
-};
+export type YahooUserGameLeagues = z.infer<typeof yahooUserGameLeaguesSchema>;
 
-type YahooTeamStandings = {
-  team_key: string;
-  team_id: string;
-  name: string;
-  url: string;
-  team_logos: { size: string; url: string }[];
-  waiver_priority: number;
-  number_of_moves: number;
-  number_of_trades: number;
-  roster_adds: any[];
-  league_scoring_type: string;
-  has_draft_grade: number;
-  auction_budget_total: string;
-  auction_budget_spent: number;
-  managers: any[];
-  standings: {
-    rank: string;
-    outcome_totals: {
-      wins: string;
-      losses: string;
-      ties: string;
-      percentage: string;
-    };
-  };
-};
+// Yahoo Player Schema
+export const yahooPlayerSchema = z.object({
+  player_key: z.string(),
+  player_id: z.string(),
+  name: z.object({
+    full: z.string(),
+    first: z.string(),
+    last: z.string(),
+    ascii_first: z.string(),
+    ascii_last: z.string(),
+  }),
+  editorial_player_key: z.string(),
+  editorial_team_key: z.string(),
+  editorial_team_full_name: z.string(),
+  editorial_team_abbr: z.string(),
+  uniform_number: z.string(),
+  display_position: z.string(),
+  headshot: z.string(),
+  is_undroppable: z.string(),
+  position_type: z.string(),
+  eligible_positions: z.array(z.string()),
+});
 
-export type YahooLeagueStandings = {
-  league_key: string;
-  league_id: string;
-  name: string;
-  url: string;
-  logo_url: string;
-  draft_status: string;
-  num_teams: number;
-  edit_key: string;
-  weekly_deadline: string;
-  league_update_timestamp: string;
-  scoring_type: string;
-  league_type: string;
-  renew: string;
-  renewed: string;
-  felo_tier: string;
-  iris_group_chat_id: string;
-  allow_add_to_dl_extra_pos: number;
-  is_pro_league: string;
-  is_cash_league: string;
-  current_week: number;
-  start_week: string;
-  start_date: string;
-  end_week: string;
-  end_date: string;
-  is_plus_league: string;
-  game_code: string;
-  season: string;
-  standings: YahooTeamStandings[];
-};
+export type YahooPlayer = z.infer<typeof yahooPlayerSchema>;
 
-export type YahooPlayer = {
-  player_key: string;
-  player_id: string;
-  name: {
-    full: string;
-    first: string;
-    last: string;
-    ascii_first: string;
-    ascii_last: string;
-  };
-  editorial_player_key: string;
-  editorial_team_key: string;
-  editorial_team_full_name: string;
-  editorial_team_abbr: string;
-  uniform_number: string;
-  display_position: string;
-  headshot: string;
-  is_undroppable: string;
-  position_type: string;
-  eligible_positions: string[];
-};
+// Yahoo Team Roster Schema
+export const yahooTeamRosterSchema = z.object({
+  team_key: z.string(),
+  team_id: z.string(),
+  name: z.string(),
+  url: z.string(),
+  team_logo: z.string(),
+  waiver_priority: z.number(),
+  number_of_moves: z.string(),
+  number_of_trades: z.number(),
+  clinched_playoffs: z.number(),
+  managers: z.tuple([
+    z.object({
+      manager_id: z.string(),
+      nickname: z.string(),
+      guid: z.string(),
+      is_commissioner: z.string(),
+    }),
+  ]),
+  roster: z.array(yahooPlayerSchema),
+});
 
-export type YahooTeamRoster = {
-  team_key: string;
-  team_id: string;
-  name: string;
-  url: string;
-  team_logo: string;
-  waiver_priority: number;
-  number_of_moves: string;
-  number_of_trades: number;
-  clinched_playoffs: number;
-  managers: [
-    {
-      manager_id: string;
-      nickname: string;
-      guid: string;
-      is_commissioner: string;
-    },
-  ];
-  roster: YahooPlayer[];
-};
+export type YahooTeamRoster = z.infer<typeof yahooTeamRosterSchema>;
 
-export type YahooUserGames = {
-  guid: string;
-  games: Array<{
-    game_key: string;
-    game_id: string;
-    name: string;
-    code: string;
-    type: string;
-    url: string;
-    season: string;
-    is_registration_over: boolean;
-    is_game_over: boolean;
-    is_offseason: boolean;
-    is_live_draft_lobby_active: boolean;
-  }>;
-};
+// Yahoo User Games Schema
+export const yahooUserGamesSchema = z.object({
+  guid: z.string(),
+  games: z.array(
+    z.object({
+      game_key: z.string(),
+      game_id: z.string(),
+      name: z.string(),
+      code: z.string(),
+      type: z.string(),
+      url: z.string(),
+      season: z.string(),
+      is_registration_over: z.boolean(),
+      is_game_over: z.boolean(),
+      is_offseason: z.boolean(),
+      is_live_draft_lobby_active: z.boolean(),
+    }),
+  ),
+});
 
-export type YahooUserGameTeams = {
-  guid: string;
-  teams: Array<{
-    game_key: string;
-    game_id: string;
-    name: string;
-    code: string;
-    type: string;
-    url: string;
-    season: string;
-    teams: Array<YahooUserGameTeam>;
-  }>;
-};
+export type YahooUserGames = z.infer<typeof yahooUserGamesSchema>;
 
-export type YahooUserGameTeam = {
-  team_key: string;
-  team_id: string;
-  name: string;
-  is_owned_by_current_login: number;
-  url: string;
-  team_logo: string;
-  waiver_priority: number;
-  number_of_moves: string;
-  number_of_trades: number;
-  managers: [
-    {
-      manager_id: string;
-      nickname: string;
-      guid: string;
-      is_current_login: string;
-      email: string;
-      image_url: string;
-    },
-  ];
-};
+// Yahoo User Game Team Schema
+export const yahooUserGameTeamSchema = z.object({
+  team_key: z.string(),
+  team_id: z.string(),
+  name: z.string(),
+  is_owned_by_current_login: z.number(),
+  url: z.string(),
+  team_logo: z.string(),
+  waiver_priority: z.number(),
+  number_of_moves: z.string(),
+  number_of_trades: z.number(),
+  managers: z.tuple([
+    z.object({
+      manager_id: z.string(),
+      nickname: z.string(),
+      guid: z.string(),
+      is_current_login: z.string(),
+      email: z.string(),
+      image_url: z.string(),
+    }),
+  ]),
+});
 
-export type FantasyStats = {
-  team_id: string;
-  team: string;
-  [key: string]: string;
-};
+export type YahooUserGameTeam = z.infer<typeof yahooUserGameTeamSchema>;
 
-export type DBFantasyStats = {
-  league_key: string;
-  team_id: string;
-  name: string;
-  week: number;
-  stats: { value: string; stat_id: string }[];
-};
+// Yahoo User Game Teams Schema
+export const yahooUserGameTeamsSchema = z.object({
+  guid: z.string(),
+  teams: z.array(
+    z.object({
+      game_key: z.string(),
+      game_id: z.string(),
+      name: z.string(),
+      code: z.string(),
+      type: z.string(),
+      url: z.string(),
+      season: z.string(),
+      teams: z.array(yahooUserGameTeamSchema),
+    }),
+  ),
+});
 
-export type YahooSettingsStatCategory = {
-  stat_id: number;
-  enabled: string;
-  name: string;
-  display_name: string;
-  group: string;
-  abbr: string;
-  sort_order: string;
-  position_type: string;
-  stat_position_types: string[];
-  is_only_display_stat: string;
-};
+export type YahooUserGameTeams = z.infer<typeof yahooUserGameTeamsSchema>;
+
+// Fantasy Stats Schema
+export const fantasyStatsSchema = z
+  .object({
+    team_id: z.string(),
+    team_name: z.string(),
+  })
+  .catchall(z.string());
+
+export type FantasyStats = z.infer<typeof fantasyStatsSchema>;
+
+// DB Fantasy Stats Schema
+export const dbFantasyStatsWeekSchema = z.object({
+  league_key: z.string(),
+  team_id: z.number(),
+  team_name: z.string(),
+  week: z.number(),
+  stats: z.array(
+    z.object({
+      value: z.string(),
+      stat_id: z.string(),
+    }),
+  ),
+});
+export type DBFantasyStatsWeek = z.infer<typeof dbFantasyStatsWeekSchema>;
+
+export const dbFantasyStatsSchema = z.array(dbFantasyStatsWeekSchema);
+export type DBFantasyStats = z.infer<typeof dbFantasyStatsSchema>;

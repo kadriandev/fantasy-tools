@@ -23,3 +23,38 @@ kv.on("error", (error) => {
 export function getRedisClient() {
   return kv;
 }
+
+/**
+ * Cache wrapper for async functions
+ * @param key - Cache key
+ * @param ttlSeconds - Time to live in seconds
+ * @param fn - Async function to execute if cache miss
+ * @returns Cached or fresh data
+ */
+export async function withCache<T>(
+  key: string,
+  ttlSeconds: number,
+  fn: () => Promise<T>,
+): Promise<T> {
+  try {
+    // Try to get from cache
+    const cached = await kv.get(key);
+    if (cached) {
+      return JSON.parse(cached) as T;
+    }
+  } catch (error) {
+    console.error(`[cache] Error reading cache for key ${key}:`, error);
+  }
+
+  // Cache miss - execute function
+  const result = await fn();
+
+  try {
+    // Store in cache with TTL
+    await kv.setex(key, ttlSeconds, JSON.stringify(result));
+  } catch (error) {
+    console.error(`[cache] Error writing cache for key ${key}:`, error);
+  }
+
+  return result;
+}

@@ -3,7 +3,9 @@
 import { db } from "@/db";
 import { stats } from "@/db/leagues.sql";
 import { eq, desc } from "drizzle-orm";
-import { createYahooClient, getLeagueStatsFromYahoo } from "../yahoo";
+import { YahooFantasy } from "../yahoo/yahoo";
+import { DBFantasyStats, dbFantasyStatsSchema } from "../yahoo/schemas";
+import { getPreviousWeekStats } from "../yahoo/utils";
 
 export async function getLastSavedWeek(league_key: string) {
   return db
@@ -14,18 +16,20 @@ export async function getLastSavedWeek(league_key: string) {
     .limit(1);
 }
 
-export async function getLeagueStats(league_key: string) {
-  const yf = await createYahooClient();
+export async function getLeagueStats(
+  league_key: string,
+): Promise<DBFantasyStats> {
+  const yf = await YahooFantasy.createClient();
 
-  const [settings, data] = await Promise.all([
-    yf.league.settings(league_key),
+  const [meta, data] = await Promise.all([
+    yf.league.meta(league_key),
     getLastSavedWeek(league_key),
   ]);
 
   // Fetch and save last week if it doesnt exist
-  const unsavedWeeks = settings.current_week - (data[0]?.week ?? 0) - 1;
+  const unsavedWeeks = meta.current_week - (data[0]?.week ?? 0) - 1;
   if (data === null || unsavedWeeks) {
-    const league_stats = await getLeagueStatsFromYahoo(
+    const league_stats = await getPreviousWeekStats(
       league_key,
       data[0]?.week ?? 0,
       unsavedWeeks,
@@ -34,5 +38,10 @@ export async function getLeagueStats(league_key: string) {
     await db.insert(stats).values(league_stats);
   }
 
-  return db.select().from(stats).where(eq(stats.league_key, league_key));
+  const league_stats = await db
+    .select()
+    .from(stats)
+    .where(eq(stats.league_key, league_key));
+
+  return dbFantasyStatsSchema.parse(league_stats);
 }

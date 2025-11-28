@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/table";
 import { getUsersTeamId } from "@/lib/data/users";
 import { cn } from "@/lib/utils";
-import { createYahooClient } from "@/lib/yahoo";
+import { YahooFantasy } from "@/lib/yahoo/yahoo";
 
 interface StandingsPageProps {
   params: Promise<{ league_key: string }>;
@@ -17,7 +17,7 @@ interface StandingsPageProps {
 export default async function StandingsPage({ params }: StandingsPageProps) {
   const { league_key } = await params;
 
-  const yf = await createYahooClient();
+  const yf = await YahooFantasy.createClient();
 
   const [teamId, standings] = await Promise.all([
     getUsersTeamId(league_key),
@@ -40,7 +40,7 @@ export default async function StandingsPage({ params }: StandingsPageProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {standings.standings.map((team: any) => (
+          {standings.map((team: any) => (
             <TableRow
               key={team.team_id}
               className={cn(
@@ -55,7 +55,7 @@ export default async function StandingsPage({ params }: StandingsPageProps) {
                 {team.standings.outcome_totals.ties}
               </TableCell>
 
-              <TableCell>{team.standings.games_back}</TableCell>
+              <TableCell>{team.standings?.games_back ?? ""}</TableCell>
             </TableRow>
           ))}
         </TableBody>

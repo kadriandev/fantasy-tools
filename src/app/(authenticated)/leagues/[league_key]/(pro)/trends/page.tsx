@@ -3,7 +3,7 @@ import TeamGraphs from "./components/team-graphs";
 import { groupStatsByWeek } from "@/lib/yahoo/utils";
 import { getLeagueCategories } from "@/lib/data/leagues";
 import { getLeagueStats } from "@/lib/data/stats";
-import { DBFantasyStats } from "@/lib/yahoo/types";
+import { DBFantasyStats } from "@/lib/yahoo/schemas";
 import { processStatChartData } from "./components/utils";
 
 interface TrendsPageProps {

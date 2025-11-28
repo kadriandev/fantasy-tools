@@ -1,4 +1,4 @@
-import { YahooSettingsStatCategory } from "@/lib/yahoo/types";
+import { YahooSettingsStatCategory } from "@/lib/yahoo/schemas";
 import { groupStatsByWeek } from "@/lib/yahoo/utils";
 
 export const processStatChartData = (
@@ -25,12 +25,18 @@ export const processStatChartData = (
 
         const user_stat = week
           .filter((w) => +w.team_id === userTeamId)[0]
-          .stats.find((s) => s.stat_id === c.stat_id.toString())!.value;
+          .stats.find(
+            (s: { stat_id: string; value: string }) =>
+              s.stat_id === c.stat_id.toString(),
+          )!.value;
 
         if (compareToTeam !== "league") {
           const comparison_stat = week
             .filter((w) => w.team_name === compareToTeam)[0]
-            .stats.find((s) => s.stat_id === c.stat_id.toString())!.value;
+            .stats.find(
+              (s: { stat_id: string; value: string }) =>
+                s.stat_id === c.stat_id.toString(),
+            )!.value;
           return {
             week: week[0].week,
             user: user_stat,
@@ -84,15 +90,16 @@ export const processRadarChartData = (
       if (compareToTeam === "league")
         return {
           stat: c.abbr,
-          userTeam: thisWeek.map((t) => t.team_id).indexOf(+userTeamId) + 1,
+          userTeam: thisWeek.map((t) => +t.team_id).indexOf(+userTeamId) + 1,
           compareTeam:
-            compareWeek.map((t) => t.team_id).indexOf(+userTeamId) + 1,
+            compareWeek.map((t) => +t.team_id).indexOf(+userTeamId) + 1,
         };
       else {
         return {
           stat: c.abbr,
-          userTeam: thisWeek.map((t) => t.team_id).indexOf(+userTeamId) + 1,
-          compareTeam: thisWeek.map((t) => t.name).indexOf(compareToTeam) + 1,
+          userTeam: thisWeek.map((t) => +t.team_id).indexOf(+userTeamId) + 1,
+          compareTeam:
+            thisWeek.map((t) => t.team_name).indexOf(compareToTeam) + 1,
         };
       }
     });

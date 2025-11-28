@@ -19,7 +19,7 @@ export async function setTokens(verified: VerifyResult<typeof subjects>) {
     httpOnly: true,
     sameSite: "lax",
     path: "/",
-    maxAge: 3600,
+    maxAge: 34560000,
   });
   cookies.set({
     name: "refresh_token",
@@ -46,7 +46,7 @@ export async function setTokens(verified: VerifyResult<typeof subjects>) {
       httpOnly: true,
       sameSite: "lax",
       path: "/",
-      maxAge: 3600,
+      maxAge: 34560000,
     });
   }
 }

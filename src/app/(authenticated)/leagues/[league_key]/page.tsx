@@ -9,14 +9,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { createYahooClient, getUpcomingMatchups } from "@/lib/yahoo";
 import Timeline from "@/components/ui/timeline";
-import { createLeagueEvents } from "./utils";
+import { createLeagueEvents, getUpcomingMatchups } from "./utils";
 import AppButtonLink from "@/components/app-button-link";
-import { YahooLeagueSettings, YahooLeagueStandings } from "@/lib/yahoo/types";
 import { catchError } from "@/lib/utils";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
+import { YahooFantasy } from "@/lib/yahoo/yahoo";
 
 export const metadata: Metadata = {
   title: "Fantasy League Information",
@@ -29,10 +27,10 @@ interface LeagueInfoPageProps {
 
 export default async function LeagueInfoPage({ params }: LeagueInfoPageProps) {
   const { league_key } = await params;
-  const yf = await createYahooClient();
+  const yf = await YahooFantasy.createClient();
 
   const [err, data] = await catchError(
-    Promise.all<[{ name: string }, YahooLeagueSettings, YahooLeagueStandings]>([
+    Promise.all([
       yf.league.meta(league_key),
       yf.league.settings(league_key),
       yf.league.standings(league_key),
@@ -46,8 +44,8 @@ export default async function LeagueInfoPage({ params }: LeagueInfoPageProps) {
 
   const [meta, settings, standings] = data;
 
-  const matchups = await getUpcomingMatchups(league_key, settings.current_week);
-  const events = createLeagueEvents(settings);
+  const matchups = await getUpcomingMatchups(league_key, meta.current_week);
+  const events = createLeagueEvents(meta, settings);
 
   return (
     <div className="container mx-auto">
@@ -83,7 +81,7 @@ export default async function LeagueInfoPage({ params }: LeagueInfoPageProps) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {standings.standings.slice(0, 4).map((team: any) => (
+                {standings.slice(0, 4).map((team: any) => (
                   <TableRow key={team.team_id}>
                     <TableCell>{team.standings.rank}</TableCell>
                     <TableCell>{team.name}</TableCell>

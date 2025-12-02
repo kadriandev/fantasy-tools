@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import { getStripeSubByUserId } from "./store";
-import { auth } from "../auth/actions";
+import { getVerifiedUser } from "../auth/actions";
 import { redirect } from "next/navigation";
 
 export async function getSubTier() {
@@ -13,12 +13,19 @@ export async function getSubTier() {
   if (usersub) {
     userId = usersub.value;
   } else {
-    const user = await auth();
+    const user = await getVerifiedUser();
     if (!user) redirect("/");
 
     userId = user.sub;
   }
 
+  const sub = await getStripeSubByUserId(userId);
+  if (sub?.status === "active") return sub;
+
+  return null;
+}
+
+export async function getSubTierFromUserId(userId: string) {
   const sub = await getStripeSubByUserId(userId);
   if (sub?.status === "active") return sub;
 

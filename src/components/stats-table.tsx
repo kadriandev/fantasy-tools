@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/select";
 import DataTable from "./data-table";
 import { useEffect, useState } from "react";
-import { DBFantasyStats, FantasyStats } from "@/lib/yahoo/schemas";
+import { DBFantasyStats, FantasyStats } from "@/lib/data/schemas";
 import { ColumnDef } from "@tanstack/react-table";
 
 interface StatsTableProps {

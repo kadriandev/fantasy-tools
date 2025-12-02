@@ -4,7 +4,7 @@ import { db } from "@/db";
 import { stats } from "@/db/leagues.sql";
 import { eq, desc } from "drizzle-orm";
 import { YahooFantasy } from "../yahoo/yahoo";
-import { DBFantasyStats, dbFantasyStatsSchema } from "../yahoo/schemas";
+import { DBFantasyStats, dbFantasyStatsSchema } from "./schemas";
 import { getPreviousWeekStats } from "../yahoo/utils";
 
 export async function getLastSavedWeek(league_key: string) {

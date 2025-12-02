@@ -1,9 +1,8 @@
 import { cookies } from "next/headers";
 import { YahooLeagueScoreboard } from "./league/schemas";
-import { DBFantasyStats, FantasyStats } from "./schemas";
 import { catchError } from "../utils";
-import { YahooUserGames } from "./user/schemas";
 import { YahooFantasy } from "./yahoo";
+import { DBFantasyStats, FantasyStats } from "../data/schemas";
 
 export async function getPreviousWeekStats(
   league_key: string,
@@ -20,9 +19,9 @@ export async function getPreviousWeekStats(
     weeksToFetch.map((w) => yf.league.scoreboard(league_key, w)),
   );
 
-  return scoreboard_weeks.reduce((acc: any[], curr: any) => {
-    const teams = curr.scoreboard.matchups.flatMap((m: any) => m.teams);
-    const stats = teams.map((t: any) => ({
+  return scoreboard_weeks.reduce((acc: any[], curr) => {
+    const teams = curr.matchups.flatMap((m) => m.teams);
+    const stats = teams.map((t) => ({
       league_key,
       week: +t.points.week,
       team_id: +t.team_id,

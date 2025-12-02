@@ -1,0 +1,47 @@
+import { getUsersTeamId } from "@/lib/data/users";
+import TeamGraphs from "./components/team-graphs";
+import { groupStatsByWeek } from "@/lib/yahoo/utils";
+import { getLeagueCategories } from "@/lib/data/leagues";
+import { getLeagueStats } from "@/lib/data/stats";
+import { processStatChartData } from "./components/utils";
+
+interface LeagueTrendsProps {
+  league_key: string;
+  compareTo: string | undefined;
+}
+
+export default async function LeagueTrends({
+  league_key,
+  compareTo,
+}: LeagueTrendsProps) {
+  const [team_id, cats, stats] = await Promise.all([
+    getUsersTeamId(league_key),
+    getLeagueCategories(league_key),
+    getLeagueStats(league_key),
+  ]);
+
+  if (!stats.length) {
+    return (
+      <div>
+        <div className="absolute top-1/2 left-1/2">
+          <p className="text-xl text-muted-foreground">
+            Trends will be available once the season starts.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const teams = groupStatsByWeek(stats)[0]
+    .filter((t) => +t.team_id !== team_id)
+    .map((t) => t.team_name);
+
+  const statChartData = processStatChartData(
+    team_id,
+    cats,
+    stats ?? [],
+    compareTo ?? "league",
+  );
+
+  return <TeamGraphs teams={teams} data={statChartData} />;
+}

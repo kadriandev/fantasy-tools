@@ -1,12 +1,12 @@
-import { auth } from "@/lib/auth/actions";
+import { getVerifiedUser } from "@/lib/auth/actions";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
 export default async function Layout({ children }: { children: ReactNode }) {
-  const subject = await auth();
+  const verified = await getVerifiedUser();
 
-  if (subject) {
+  if (verified) {
     redirect("/leagues");
   }
 

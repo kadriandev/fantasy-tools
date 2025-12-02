@@ -86,7 +86,7 @@ export const yahooLeagueScoreboardSchema = z.object({
           stats: z.array(
             z.object({
               stat_id: z.string(),
-              value: z.string(),
+              value: z.coerce.string().nullable(),
             }),
           ),
         }),

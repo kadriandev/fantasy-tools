@@ -1,13 +1,12 @@
-import { getUsersTeamId } from "@/lib/data/users";
-import TeamGraphs from "./components/team-graphs";
-import { groupStatsByWeek } from "@/lib/yahoo/utils";
-import { getLeagueCategories } from "@/lib/data/leagues";
-import { getLeagueStats } from "@/lib/data/stats";
-import { processStatChartData } from "./components/utils";
+import AuthWrapper from "@/components/auth-wrapper";
+import LeagueTrends from "./league-trends";
 
 interface TrendsPageProps {
   params: Promise<{ league_key: string }>;
-  searchParams: Promise<{ compareTo: string | undefined }>;
+  searchParams: Promise<{
+    compareTo: string | undefined;
+    session_expired: boolean;
+  }>;
 }
 
 export default async function TrendsPage({
@@ -15,36 +14,11 @@ export default async function TrendsPage({
   searchParams,
 }: TrendsPageProps) {
   const { league_key } = await params;
-  const { compareTo } = await searchParams;
+  const { compareTo, session_expired } = await searchParams;
 
-  const [team_id, cats, stats] = await Promise.all([
-    getUsersTeamId(league_key),
-    getLeagueCategories(league_key),
-    getLeagueStats(league_key),
-  ]);
-
-  if (!stats.length) {
-    return (
-      <div>
-        <div className="absolute top-1/2 left-1/2">
-          <p className="text-xl text-muted-foreground">
-            Trends will be available once the season starts.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  const teams = groupStatsByWeek(stats)[0]
-    .filter((t) => +t.team_id !== team_id)
-    .map((t) => t.team_name);
-
-  const statChartData = processStatChartData(
-    team_id,
-    cats,
-    stats ?? [],
-    compareTo ?? "league",
+  return (
+    <AuthWrapper session_expired={session_expired}>
+      <LeagueTrends league_key={league_key} compareTo={compareTo} />
+    </AuthWrapper>
   );
-
-  return <TeamGraphs teams={teams} data={statChartData} />;
 }

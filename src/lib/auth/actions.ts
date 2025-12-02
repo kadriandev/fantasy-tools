@@ -5,6 +5,26 @@ import { headers as getHeaders, cookies as getCookies } from "next/headers";
 import { subjects, UserSubject } from "../../../auth/subjects";
 import { client, setTokens } from "./auth";
 
+export async function getVerifiedUser() {
+  const cookies = await getCookies();
+  const accessToken = cookies.get("access_token");
+  const refreshToken = cookies.get("refresh_token");
+
+  if (!accessToken) {
+    return false;
+  }
+
+  const verified = await client.verify(subjects, accessToken.value, {
+    refresh: refreshToken?.value,
+  });
+
+  if (verified.err) {
+    return redirect("/");
+  }
+
+  return verified.subject.properties as UserSubject;
+}
+
 export async function auth(): Promise<UserSubject | false> {
   const cookies = await getCookies();
   const accessToken = cookies.get("access_token");

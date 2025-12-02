@@ -1,10 +1,9 @@
 import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { auth } from "@/lib/auth/actions";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { getVerifiedUser } from "@/lib/auth/actions";
 import { getLeagues } from "@/lib/data/leagues";
 import { getSubTier } from "@/lib/stripe/get-sub-tier";
 import { catchError } from "@/lib/utils";
-import { Menu } from "lucide-react";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
@@ -16,14 +15,13 @@ const routes = [
 ];
 
 export default async function Layout({ children }: { children: ReactNode }) {
-  const subject = await auth();
+  const verified = await getVerifiedUser();
 
-  if (!subject) {
+  if (!verified) {
     redirect("/");
   }
-
   const [err, data] = await catchError(
-    Promise.all([getSubTier(), getLeagues(subject.sub)]),
+    Promise.all([getSubTier(), getLeagues(verified.sub)]),
   );
 
   if (err) {

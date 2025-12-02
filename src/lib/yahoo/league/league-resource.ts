@@ -45,21 +45,18 @@ export class YahooLeagueResource {
     league_key: string,
     week: number = -1,
   ): Promise<YahooLeagueScoreboard> {
-    return withCache(
-      `yahoo:league:${league_key}:scoreboard:${week === -1 ? "current" : week}`,
-      3600,
-      async () => {
-        let url = `/league/${league_key}/scoreboard`;
+    const cacheKey = `yahoo:league:${league_key}:scoreboard:${week === -1 ? "current" : week}`;
+    return withCache(cacheKey, 3600, async () => {
+      let url = `/league/${league_key}/scoreboard`;
 
-        if (week !== -1) {
-          url += `;week=${week}`;
-        }
+      if (week !== -1) {
+        url += `;week=${week}`;
+      }
 
-        const data = await this.yf.api(url);
-        return mapScoreboard(
-          data.fantasy_content.league[1].scoreboard[0].matchups,
-        );
-      },
-    );
+      const data = await this.yf.api(url);
+      return mapScoreboard(
+        data.fantasy_content.league[1].scoreboard[0].matchups,
+      );
+    });
   }
 }

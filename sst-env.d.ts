@@ -9,9 +9,17 @@ declare module "sst" {
       "type": "sst.aws.Auth"
       "url": string
     }
-    "DBPassword": {
-      "type": "sst.sst.Secret"
-      "value": string
+    "FantasyTools": {
+      "bastion": string
+      "type": "sst.aws.Vpc"
+    }
+    "FantasyToolsVpc": {
+      "bastion": string
+      "type": "sst.aws.Vpc"
+    }
+    "MigratorFn": {
+      "name": string
+      "type": "sst.aws.Function"
     }
     "Postgres": {
       "database": string
@@ -19,13 +27,6 @@ declare module "sst" {
       "password": string
       "port": number
       "type": "sst.aws.Postgres"
-      "username": string
-    }
-    "RedisV2": {
-      "host": string
-      "password": string
-      "port": number
-      "type": "sst.aws.Redis"
       "username": string
     }
     "SENTRY_AUTH_TOKEN": {
@@ -51,6 +52,13 @@ declare module "sst" {
     "STRIPE_WEBHOOK_SECRET": {
       "type": "sst.sst.Secret"
       "value": string
+    }
+    "Valkey": {
+      "host": string
+      "password": string
+      "port": number
+      "type": "sst.aws.Redis"
+      "username": string
     }
     "Web": {
       "type": "sst.aws.Nextjs"

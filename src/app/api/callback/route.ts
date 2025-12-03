@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const code = url.searchParams.get("code");
 
-  const host = `${Resource.App.stage === "production" ? "https://" : "http://"}${req.headers.get("host")}`;
+  const host = `${Resource.App.stage === "prod" ? "https://" : "http://"}${req.headers.get("host")}`;
   const exchanged = await client.exchange(code!, `${host}/api/callback`);
 
   if (exchanged.err) {

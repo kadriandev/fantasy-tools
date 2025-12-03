@@ -9,7 +9,7 @@ const pool = new Pool({
   user: Resource.Postgres.username,
   password: Resource.Postgres.password,
   ssl:
-    Resource.App.stage === "production"
+    Resource.App.stage === "prod"
       ? { requestCert: true, rejectUnauthorized: false }
       : false,
 });

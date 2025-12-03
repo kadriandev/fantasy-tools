@@ -12,7 +12,7 @@ export default defineConfig({
     password: Resource.Postgres.password,
     database: Resource.Postgres.database,
     ssl:
-      Resource.App.stage === "production"
+      Resource.App.stage === "prod"
         ? { requestCert: true, rejectUnauthorized: false }
         : false,
   },

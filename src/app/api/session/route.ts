@@ -9,13 +9,13 @@ export async function GET(req: Request) {
   const refreshToken = cookies.get("refresh_token");
 
   if (!accessToken) {
-    return false;
+    return;
   }
 
   const verified = await client.verify(subjects, accessToken.value, {
     refresh: refreshToken?.value,
   });
-  if (verified.err) return false;
+  if (verified.err) return;
 
   await setTokens(verified);
   redirect("/leagues");

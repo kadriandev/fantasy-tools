@@ -10,7 +10,7 @@
     "lint": "next lint",
     "db": "sst shell drizzle-kit",
     "db:generate": "pnpm db generate",
-    "sst:deploy": "sst deploy --stage production"
+    "sst:deploy": "sst deploy --stage prod"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
@@ -42,7 +42,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "recharts": "^2.15.1",
-    "sst": "3.17.23",
+    "sst": "^3.8.2",
     "stripe": "^17.6.0",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",

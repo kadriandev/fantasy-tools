@@ -3,8 +3,8 @@ export default $config({
   app(input) {
     return {
       name: "fantasy-tools",
-      removal: input?.stage === "production" ? "retain" : "remove",
-      protect: ["production"].includes(input?.stage),
+      removal: input?.stage === "prod" ? "retain" : "remove",
+      protect: ["prod"].includes(input?.stage),
       home: "aws",
       providers: { cloudflare: "6.10.0" },
     };
@@ -26,7 +26,7 @@ export default $config({
           event.branch === "master" &&
           event.action === "pushed"
         ) {
-          return { stage: "production" };
+          return { stage: "prod" };
         }
       },
     },

@@ -1,23 +1,29 @@
-import { vpc } from "./vpc";
+// import { vpc } from "./vpc";
 import { isPermanentStage } from "./stage";
 
-export const redis = new sst.aws.Redis("RedisV2", {
+const vpc = sst.aws.Vpc.get("FantasyTools", "vpc-048984904903b0923");
+
+export const redis = new sst.aws.Redis("Valkey", {
   vpc,
+  engine: "valkey",
   dev: {
     host: "localhost",
     port: 6379,
   },
 });
 
-export const database = new sst.aws.Postgres("Postgres", {
-  vpc,
-  dev: {
-    username: "postgres",
-    password: "password",
-    database: "local",
-    port: 5432,
-  },
-  password: new sst.Secret("DBPassword").value,
+// export const database = new sst.aws.Postgres("Postgres", {
+//   vpc,
+//   dev: {
+//     username: "postgres",
+//     password: "password",
+//     database: "local",
+//     port: 5432,
+//   },
+//   password: new sst.Secret("DBPassword").value,
+// });
+export const database = sst.aws.Postgres.get("Postgres", {
+  id: "fantasy-tools-production-postgresinstance-nmddkvsn",
 });
 
 if (isPermanentStage) {
@@ -47,7 +53,6 @@ if (isPermanentStage) {
       dependsOn: [database],
     },
   );
-
   new aws.lambda.Invocation("MigratorInvocation", {
     functionName: migrator.name,
     input: JSON.stringify({

@@ -2,21 +2,21 @@ import { Resource } from "sst";
 import Redis, { Cluster } from "ioredis";
 
 const kv =
-  Resource.App.stage === "production"
+  Resource.App.stage === "prod"
     ? new Cluster(
-        [{ host: Resource.RedisV2.host, port: Resource.RedisV2.port }],
+        [{ host: Resource.Valkey.host, port: Resource.Valkey.port }],
         {
           slotsRefreshTimeout: 20000,
           redisOptions: {
             tls: { checkServerIdentity: () => undefined },
-            username: Resource.RedisV2.username,
-            password: Resource.RedisV2.password,
+            username: Resource.Valkey.username,
+            password: Resource.Valkey.password,
           },
         },
       )
     : new Redis({
-        host: Resource.RedisV2.host,
-        port: Resource.RedisV2.port,
+        host: Resource.Valkey.host,
+        port: Resource.Valkey.port,
       });
 
 kv.on("error", (error) => {

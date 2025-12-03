@@ -1,4 +1,5 @@
-// import { vpc } from "./vpc";
+/// <reference path="../.sst/platform/config.d.ts" />
+
 import { isPermanentStage } from "./stage";
 
 const vpc = sst.aws.Vpc.get("FantasyTools", "vpc-048984904903b0923");
@@ -12,19 +13,19 @@ export const redis = new sst.aws.Redis("Valkey", {
   },
 });
 
-// export const database = new sst.aws.Postgres("Postgres", {
-//   vpc,
-//   dev: {
-//     username: "postgres",
-//     password: "password",
-//     database: "local",
-//     port: 5432,
-//   },
-//   password: new sst.Secret("DBPassword").value,
-// });
-export const database = sst.aws.Postgres.get("Postgres", {
-  id: "fantasy-tools-production-postgresinstance-nmddkvsn",
+export const database = new sst.aws.Postgres("Postgres", {
+  vpc,
+  dev: {
+    username: "postgres",
+    password: "password",
+    database: "local",
+    port: 5432,
+  },
+  password: new sst.Secret("DBPassword").value,
 });
+// export const database = sst.aws.Postgres.get("Postgres", {
+//   id: "fantasy-tools-production-postgresinstance-nmddkvsn",
+// });
 
 if (isPermanentStage) {
   const migrator = new sst.aws.Function(

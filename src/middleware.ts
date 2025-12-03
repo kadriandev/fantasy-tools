@@ -28,7 +28,10 @@ export function middleware(request: NextRequest) {
     if (!yahooAccessToken) {
       const url = request.nextUrl.clone();
       url.searchParams.set("session_expired", "true");
-      return NextResponse.redirect(url);
+
+      const response = NextResponse.redirect(url);
+      response.cookies.delete("yahoo_access_token");
+      return response;
     }
   }
 

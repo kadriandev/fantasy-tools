@@ -24,6 +24,9 @@ async function getUser(access_token: string) {
 
 const app = issuer({
   subjects,
+  ttl: {
+    access: 3600,
+  },
   providers: {
     yahoo: YahooProvider({
       clientID: Resource.YAHOO_CLIENT_ID.value,

@@ -30,7 +30,7 @@ export function middleware(request: NextRequest) {
       url.searchParams.set("session_expired", "true");
 
       const response = NextResponse.redirect(url);
-      response.cookies.delete("yahoo_access_token");
+      response.cookies.set("yahoo_access_token", "", { maxAge: 0 });
       return response;
     }
   }

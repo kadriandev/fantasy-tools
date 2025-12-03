@@ -30,6 +30,7 @@ export const user_to_league = pgTable(
       .references(() => leagues.league_key, { onDelete: "cascade" }),
     team_id: integer().notNull(),
     team_name: text(),
+    is_hidden: integer().default(0).notNull(),
   },
   (table) => [primaryKey({ columns: [table.user_id, table.league_key] })],
 );

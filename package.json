@@ -8,9 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db": "sst shell drizzle-kit",
-    "db:generate": "pnpm db generate",
-    "sst:deploy": "sst deploy --stage prod"
+    "db": "sst shell drizzle-kit"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",

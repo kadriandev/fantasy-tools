@@ -147,9 +147,17 @@ export function AppSidebar({ tier, routes, leagues }: AppSidebarProps) {
         </SidebarContent>
         <SidebarFooter className="mb-8">
           <SidebarGroup>
-            <SidebarGroupLabel className="text-lg">Settings</SidebarGroupLabel>
+            {/* <SidebarGroupLabel className="text-lg">Settings</SidebarGroupLabel> */}
             <SidebarGroupContent>
               <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link href="/settings">
+                      {/* <item.icon /> */}
+                      <span>Settings</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <Link href="/account">

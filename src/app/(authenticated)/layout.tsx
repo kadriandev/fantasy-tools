@@ -2,7 +2,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { getVerifiedUser } from "@/lib/auth/actions";
 import { getLeagues } from "@/lib/data/leagues";
-import { getSubTier } from "@/lib/stripe/get-sub-tier";
+import { getSubTierFromUserId } from "@/lib/stripe/get-sub-tier";
 import { catchError } from "@/lib/utils";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
@@ -20,12 +20,13 @@ export default async function Layout({ children }: { children: ReactNode }) {
   if (!verified) {
     redirect("/");
   }
+
   const [err, data] = await catchError(
-    Promise.all([getSubTier(), getLeagues(verified.sub)]),
+    Promise.all([getSubTierFromUserId(verified.sub), getLeagues(verified.sub)]),
   );
 
   if (err) {
-    console.error("Error getting leagues or sub tier");
+    console.error("Error getting leagues or sub tier", err);
     redirect("/");
   }
 

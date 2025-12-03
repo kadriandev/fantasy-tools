@@ -69,10 +69,66 @@ export async function getLeagues(userId: string) {
     .where(
       and(
         eq(user_to_league.user_id, userId),
+        eq(user_to_league.is_hidden, 0),
         gte(leagues.end_date, new Date().toISOString()),
       ),
     );
   return l;
+}
+
+export async function getAllLeagues(userId: string) {
+  const l = await db
+    .select({
+      league_name: leagues.name,
+      league_key: leagues.league_key,
+      url: leagues.url,
+      game: leagues.game,
+      is_hidden: user_to_league.is_hidden,
+    })
+    .from(leagues)
+    .innerJoin(
+      user_to_league,
+      eq(leagues.league_key, user_to_league.league_key),
+    )
+    .where(
+      and(
+        eq(user_to_league.user_id, userId),
+        gte(leagues.end_date, new Date().toISOString()),
+      ),
+    );
+  return l;
+}
+
+export async function toggleLeagueVisibility(leagueKey: string) {
+  const user = await auth();
+  if (!user) redirect("/");
+
+  const result = await db
+    .select({ is_hidden: user_to_league.is_hidden })
+    .from(user_to_league)
+    .where(
+      and(
+        eq(user_to_league.user_id, user.sub),
+        eq(user_to_league.league_key, leagueKey),
+      ),
+    )
+    .then((res) => res[0]);
+
+  if (!result) {
+    throw new Error("League not found");
+  }
+
+  await db
+    .update(user_to_league)
+    .set({ is_hidden: result.is_hidden === 0 ? 1 : 0 })
+    .where(
+      and(
+        eq(user_to_league.user_id, user.sub),
+        eq(user_to_league.league_key, leagueKey),
+      ),
+    );
+
+  return { is_hidden: result.is_hidden === 0 ? 1 : 0 };
 }
 
 export async function getLeagueCategories(league_key: string) {

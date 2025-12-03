@@ -29,11 +29,7 @@ export function SessionExpiredDialog() {
     setIsRefreshing(true);
     try {
       await fetch("/api/session");
-
-      // Close dialog and remove search param
       handleClose();
-      // Reload the page to reflect the refreshed session
-      // window.location.reload();
     } catch (error) {
       console.error("Failed to refresh session:", error);
       setIsRefreshing(false);
@@ -41,7 +37,6 @@ export function SessionExpiredDialog() {
   };
 
   const handleClose = () => {
-    setOpen(false);
     // Remove the session_expired param from URL
     const params = new URLSearchParams(searchParams.toString());
     params.delete("session_expired");
@@ -49,6 +44,7 @@ export function SessionExpiredDialog() {
       ? `${window.location.pathname}?${params.toString()}`
       : window.location.pathname;
     router.replace(newUrl);
+    setOpen(false);
   };
 
   return (

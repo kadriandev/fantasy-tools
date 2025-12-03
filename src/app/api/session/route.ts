@@ -2,21 +2,21 @@ import { cookies as getCookies } from "next/headers";
 import { client, setTokens } from "@/lib/auth/auth";
 import { subjects } from "../../../../auth/subjects";
 import { redirect } from "next/navigation";
+import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
   const cookies = await getCookies();
   const accessToken = cookies.get("access_token");
   const refreshToken = cookies.get("refresh_token");
 
-  if (!accessToken) {
-    return;
-  }
+  if (!accessToken) redirect("/");
 
-  const verified = await client.verify(subjects, accessToken.value, {
+  const verified = await client.verify(subjects, accessToken?.value!, {
     refresh: refreshToken?.value,
   });
-  if (verified.err) return;
+  if (verified.err) redirect("/");
 
-  await setTokens(verified);
-  redirect("/leagues");
+  setTokens(verified);
+
+  return NextResponse.json({}, { status: 200 });
 }

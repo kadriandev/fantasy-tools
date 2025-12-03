@@ -13,10 +13,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Database Operations
 - `pnpm db` - Access Drizzle Kit CLI (use with SST shell)
-- `pnpm db:generate` - Generate database migrations
+- `pnpm db generate` - Generate database migrations
+- `pnpm db migrate` - Apply migrations to the database
 
-### Deployment
-- `pnpm sst:deploy` - Deploy to production stage
 
 ## Project Architecture
 
@@ -28,7 +27,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Payments**: Stripe integration
 - **Cache**: Redis for session storage
 - **AI**: Anthropic Claude API integration
-- **UI**: Radix UI components with Tailwind CSS
+- **UI**: shadcn/ui + Radix UI components with Tailwind CSS
 
 ### Core Structure
 

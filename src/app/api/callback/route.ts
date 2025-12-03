@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
   }
 
   // Check if user exists
-  let verified = await client.verify(subjects, exchanged.tokens.access);
+  const verified = await client.verify(subjects, exchanged.tokens.access);
   if (verified.err) {
     return NextResponse.json(exchanged.err, { status: 400 });
   }

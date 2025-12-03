@@ -9,10 +9,6 @@ declare module "sst" {
       "type": "sst.aws.Auth"
       "url": string
     }
-    "DBPassword": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
     "FantasyTools": {
       "bastion": string
       "type": "sst.aws.Vpc"

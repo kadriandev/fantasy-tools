@@ -1,3 +1,5 @@
+/// <reference path="../.sst/platform/config.d.ts" />
+
 import { isPermanentStage } from "./stage";
 import { database } from "./storage";
 

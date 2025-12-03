@@ -4,12 +4,12 @@ import { db } from "@/db";
 import { leagues, user_to_league } from "@/db/leagues.sql";
 import { eq, sql, and, gte } from "drizzle-orm";
 import { users } from "@/db/users.sql";
-import { auth } from "../auth/actions";
+import { auth, getVerifiedUser } from "../auth/actions";
 import { redirect } from "next/navigation";
 import { getUserLeaguesFromYahoo } from "../yahoo/utils";
 
 export async function refreshLeagues() {
-  const user = await auth();
+  const user = await getVerifiedUser();
   if (!user) redirect("/");
 
   const user_leagues = await getUserLeaguesFromYahoo();
@@ -48,7 +48,7 @@ export async function refreshLeagues() {
       tx.rollback();
     }
   });
-  // redirect("/leagues");
+  redirect("/leagues");
 }
 
 export async function getLeagues(userId: string) {

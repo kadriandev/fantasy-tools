@@ -1,7 +1,6 @@
 import { YahooFantasy } from "../yahoo";
 import { mapGames, mapUserLeagues, mapUserTeams } from "../mappers/user-mapper";
 import {
-  YahooGameLeague,
   YahooUserGameLeagues,
   YahooUserGames,
   YahooUserGameTeams,

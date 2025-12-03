@@ -7,13 +7,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { createStripeCheckout } from "@/lib/stripe/create-checkout";
-import { getSubTier } from "@/lib/stripe/get-sub-tier";
+import {
+  getSubTierFromUserId,
+  restorePurchase,
+} from "@/lib/stripe/get-sub-tier";
 import { stripe } from "@/lib/stripe/stripe";
+import { cookies } from "next/headers";
 import Link from "next/link";
 import { Resource } from "sst";
 
 export default async function AccountPage() {
-  const sub = await getSubTier();
+  const cookieStore = await cookies();
+  const usersub = cookieStore.get("user_sub");
+
+  const sub = await getSubTierFromUserId(usersub?.value!);
 
   const { data: prices } = await stripe.prices.list({
     product: Resource.STRIPE_PRODUCT_ID.value,
@@ -41,11 +48,7 @@ export default async function AccountPage() {
             </CardHeader>
             <CardContent>
               <p>
-                The current billing cycle started on{" "}
-                {new Date(sub.currentPeriodStart! * 1000).toLocaleDateString(
-                  "en-US",
-                )}
-                .
+                {`The current billing cycle started on ${new Date(sub.currentPeriodStart! * 1000).toLocaleDateString("en-US")}.`}
               </p>
               <p className="mt-4">
                 Click here to view, make changes, or cancel your subscription.
@@ -66,46 +69,56 @@ export default async function AccountPage() {
             </CardFooter>
           </Card>
         ) : (
-          <div className="mt-20 flex justify-center gap-8">
-            {prices
-              .sort((a, b) => a.unit_amount! - b.unit_amount!)
-              .map((p) => (
-                <Card key={p.id} className="min-w-1/3">
-                  <CardHeader>
-                    <CardTitle>{p.metadata.name}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="h-32">
-                    <span className="text-5xl font-extrabold tracking-tight">
-                      ${(p.unit_amount! / 100).toFixed(2)}
-                    </span>
-                    {p.recurring?.interval === "year" && (
-                      <p className="mt-2 text-sm text-gray-500">
-                        Billed annually (Save{" "}
-                        {(
-                          (((monthlyPrice! / 100) * 12 - p.unit_amount! / 100) /
-                            ((monthlyPrice! / 100) * 12)) *
-                          100
-                        ).toFixed(0)}
-                        %)
-                      </p>
-                    )}
-                  </CardContent>
-                  <CardFooter>
-                    {sub?.priceId !== p.id ? (
-                      <form className="mx-auto" action={createCheckout}>
-                        <input type="hidden" name="priceId" value={p.id} />
-                        <Button type="submit" variant={"outline"}>
-                          Select Plan
-                        </Button>
-                      </form>
-                    ) : (
-                      <Link href={Resource.STRIPE_PORTAL_URL.value}>
-                        <Button variant="outline">Manage Subscription</Button>
-                      </Link>
-                    )}
-                  </CardFooter>
-                </Card>
-              ))}
+          <div>
+            <div className="mt-20 flex justify-center gap-8">
+              {prices
+                .sort((a, b) => a.unit_amount! - b.unit_amount!)
+                .map((p) => (
+                  <Card key={p.id} className="min-w-1/3">
+                    <CardHeader>
+                      <CardTitle>{p.metadata.name}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="h-32">
+                      <span className="text-5xl font-extrabold tracking-tight">
+                        ${(p.unit_amount! / 100).toFixed(2)}
+                      </span>
+                      {p.recurring?.interval === "year" && (
+                        <p className="mt-2 text-sm text-gray-500">
+                          Billed annually (Save{" "}
+                          {(
+                            (((monthlyPrice! / 100) * 12 -
+                              p.unit_amount! / 100) /
+                              ((monthlyPrice! / 100) * 12)) *
+                            100
+                          ).toFixed(0)}
+                          %)
+                        </p>
+                      )}
+                    </CardContent>
+                    <CardFooter>
+                      {sub?.priceId !== p.id ? (
+                        <form className="mx-auto" action={createCheckout}>
+                          <input type="hidden" name="priceId" value={p.id} />
+                          <Button type="submit" variant={"outline"}>
+                            Select Plan
+                          </Button>
+                        </form>
+                      ) : (
+                        <Link href={Resource.STRIPE_PORTAL_URL.value}>
+                          <Button variant="outline">Manage Subscription</Button>
+                        </Link>
+                      )}
+                    </CardFooter>
+                  </Card>
+                ))}
+            </div>
+
+            <div className="mt-4 flex items-center justify-center">
+              Already subscribed? Click here to restore your subscription.
+              <form className="ml-2" action={restorePurchase}>
+                <Button variant="ghost">Restore Purchase</Button>
+              </form>
+            </div>
           </div>
         )}
       </div>

@@ -22,6 +22,15 @@ export async function setTokens(verified: VerifyResult<typeof subjects>) {
     });
 
     cookies.set({
+      name: "yahoo_refresh_token",
+      value: verified.subject.properties.refresh,
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 34560000,
+    });
+
+    cookies.set({
       name: "user_sub",
       value: verified.subject.properties.sub,
       httpOnly: true,

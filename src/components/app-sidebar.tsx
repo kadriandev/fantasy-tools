@@ -44,7 +44,7 @@ export function AppSidebar({ tier, routes, leagues }: AppSidebarProps) {
   const router = useRouter();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [league_key, setLeagueKey] = useState(
-    pathname.split("/")[2] ?? leagues[0].league_key,
+    pathname.split("/")[2] ?? leagues[0]?.league_key ?? "",
   );
   const { isMobile, toggleSidebar } = useSidebar();
 

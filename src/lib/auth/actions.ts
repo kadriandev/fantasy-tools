@@ -76,6 +76,7 @@ export async function logout() {
   cookies.delete("access_token");
   cookies.delete("refresh_token");
   cookies.delete("yahoo_access_token");
+  cookies.delete("yahoo_refresh_token");
   cookies.delete("user_sub");
 
   redirect("/");

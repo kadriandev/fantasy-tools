@@ -19,6 +19,7 @@ export const userSchema = z.object({
   }),
   picture: z.string().url(),
   access: z.string(),
+  refresh: z.string(),
 });
 
 export type UserSubject = z.infer<typeof userSchema>;

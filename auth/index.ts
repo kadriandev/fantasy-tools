@@ -3,19 +3,21 @@ import { handle } from "hono/aws-lambda";
 import { issuer } from "@openauthjs/openauth";
 import { YahooProvider } from "@openauthjs/openauth/provider/yahoo";
 import { subjects, userSchema } from "./subjects";
+import { Oauth2Token } from "@openauthjs/openauth/provider/oauth2";
 
-async function getUser(access_token: string) {
+async function getUser(tokens: Oauth2Token) {
   // Get user from database and return user ID
   const userinfo = await fetch(
     "https://api.login.yahoo.com/openid/v1/userinfo",
     {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${access_token}`,
+        Authorization: `Bearer ${tokens.access}`,
       },
     },
   ).then((res) => res.json());
-  userinfo.access = access_token;
+  userinfo.access = tokens.access;
+  userinfo.refresh = tokens.refresh;
 
   const user = userSchema.parse(userinfo);
 
@@ -24,9 +26,6 @@ async function getUser(access_token: string) {
 
 const app = issuer({
   subjects,
-  ttl: {
-    access: 3600,
-  },
   providers: {
     yahoo: YahooProvider({
       clientID: Resource.YAHOO_CLIENT_ID.value,
@@ -36,7 +35,7 @@ const app = issuer({
   },
   success: async (ctx, value) => {
     if (value.provider === "yahoo") {
-      const user = await getUser(value.tokenset.access);
+      const user = await getUser(value.tokenset);
       if (user) {
         console.log(`[SUCCESSFUL LOGIN]: ${user.name} logged in.`);
         return ctx.subject("user", user);

@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { refreshYahooTokens } from "./lib/yahoo/refresh-token";
 
 const publicRoutes = ["/", "/api"];
 
-export function middleware(request: NextRequest) {
-  const { pathname, searchParams } = request.nextUrl;
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  const res = NextResponse.next();
 
   // Skip middleware for API routes, static files, and Next.js internals
   if (
@@ -16,26 +19,37 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Skip if session_expired param is already present to avoid redirect loops
-  if (searchParams.get("session_expired") === "true") {
-    return NextResponse.next();
-  }
-
   const isPublicRoute = publicRoutes.some((r) => pathname === r);
-  if (!isPublicRoute) {
-    const yahooAccessToken = request.cookies.get("yahoo_access_token");
-    // If Yahoo access token is missing, redirect with session_expired param
-    if (!yahooAccessToken) {
-      const url = request.nextUrl.clone();
-      url.searchParams.set("session_expired", "true");
+  if (isPublicRoute) return NextResponse.next();
 
-      const response = NextResponse.redirect(url);
-      response.cookies.set("yahoo_access_token", "", { maxAge: 0 });
-      return response;
-    }
+  const access = request.cookies.get("yahoo_access_token");
+  const refresh = request.cookies.get("yahoo_refresh_token");
+  let access_token = access?.value;
+
+  if (!refresh) return NextResponse.redirect("/");
+
+  if (!access_token) {
+    const tokens = await refreshYahooTokens(refresh.value);
+    res.cookies.set({
+      name: "yahoo_access_token",
+      value: tokens.access_token,
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 3600,
+    });
+
+    res.cookies.set({
+      name: "yahoo_refresh_token",
+      value: tokens.refresh_token,
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 34560000,
+    });
   }
 
-  return NextResponse.next();
+  return res;
 }
 
 export const config = {

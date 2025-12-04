@@ -1,8 +1,6 @@
 import { cookies } from "next/headers";
 import { YahooLeagueResource } from "./league/league-resource";
 import { YahooUserResource } from "./user/user-resource";
-import { getVerifiedUser } from "../auth/actions";
-import { redirect } from "next/navigation";
 import { YahooApiError } from "./errors/yahoo-api-error";
 
 export class YahooFantasy {
@@ -21,14 +19,7 @@ export class YahooFantasy {
   static async createClient() {
     const cookieStore = await cookies();
     const access = cookieStore.get("yahoo_access_token");
-
-    if (!access) {
-      const subject = await getVerifiedUser();
-      if (!subject) redirect("/");
-      return new YahooFantasy(subject.access);
-    }
-
-    return new YahooFantasy(access.value);
+    return new YahooFantasy(access?.value!);
   }
 
   async api(resource: string) {

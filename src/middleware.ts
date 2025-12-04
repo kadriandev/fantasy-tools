@@ -5,7 +5,7 @@ import { refreshYahooTokens } from "./lib/yahoo/refresh-token";
 const publicRoutes = ["/", "/api"];
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, origin } = request.nextUrl;
 
   const res = NextResponse.next();
 
@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest) {
   const refresh = request.cookies.get("yahoo_refresh_token");
   let access_token = access?.value;
 
-  if (!refresh) return NextResponse.redirect("/");
+  if (!refresh) return NextResponse.redirect(`${origin}/`);
 
   if (!access_token) {
     const tokens = await refreshYahooTokens(refresh.value);

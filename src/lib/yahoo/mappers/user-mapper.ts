@@ -45,8 +45,8 @@ export function mapUserTeams(gs: any) {
   for (let i = 0; i < count; i++) {
     let game = gs[i].game[0];
 
-    const ts = gs[i].game[1].teams;
-    const teamCount = ts.count;
+    const ts = gs[i].game[1]?.teams;
+    const teamCount = ts ? ts.count : 0;
     const teams = [];
     for (let j = 0; j < teamCount; j++) {
       const team = mapTeam(ts[j].team[0]);
